@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "272624475291",
+    "project_id": "androidassignment3-78d46",
+    "storage_bucket": "androidassignment3-78d46.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:272624475291:android:1fe3daf6d5506e9bbf3a3e",
+        "android_client_info": {
+          "package_name": "com.example.hotelrentala3"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "272624475291-93tqbrklchgupagm6uk4r9j00e5dnu4b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.hotelrentala3",
+            "certificate_hash": "d05eb00c19e3d624676d14e1633320decb214695"
+          }
+        },
+        {
+          "client_id": "272624475291-edg6iil97j6t9octfbcj1bshe2sustno.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4kVZKHoUBo2aFrlxIgab3QjDxA2qndz4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "272624475291-edg6iil97j6t9octfbcj1bshe2sustno.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
