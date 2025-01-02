@@ -31,4 +31,9 @@
         android:layout_height="wrap_content"
         android:text="Don't have an account? Register" />
 
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/buttonSignInWithGoogle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
 </LinearLayout>
