@@ -32,10 +32,11 @@ public class LoginActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
+
         // Check if the user is logged in
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
-            // If yes, open HomeActivity
+        // If yes, open HomeActivity
             navigateToHome();
         }
 

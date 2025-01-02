@@ -5,6 +5,14 @@
     android:orientation="vertical"
     android:padding="16dp">
 
+
+    <EditText
+        android:id="@+id/editTextFullName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Full Name"
+        android:inputType="textPersonName" />
+
     <EditText
         android:id="@+id/editTextEmail"
         android:layout_width="match_parent"
@@ -25,6 +33,7 @@
         android:layout_height="wrap_content"
         android:hint="Confirm Password"
         android:inputType="textPassword" />
+
 
     <Button
         android:id="@+id/buttonRegister"

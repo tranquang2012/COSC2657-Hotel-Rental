@@ -11,12 +11,18 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    private EditText editTextEmail, editTextPassword, editTextConfirmPassword;
+    private EditText editTextEmail, editTextPassword, editTextConfirmPassword, editTextFullName;
     private Button buttonRegister, buttonGoToLogin;
     private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +34,9 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
 
+        editTextFullName = findViewById(R.id.editTextFullName);
         editTextEmail = findViewById(R.id.editTextEmail);
         editTextPassword = findViewById(R.id.editTextPassword);
         editTextConfirmPassword = findViewById(R.id.editTextConfirmPassword);
@@ -40,8 +48,10 @@ public class RegisterActivity extends AppCompatActivity {
             String email = editTextEmail.getText().toString();
             String password = editTextPassword.getText().toString();
             String confirmPassword = editTextConfirmPassword.getText().toString();
+            String fullName = editTextFullName.getText().toString();
 
-            if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(confirmPassword)) {
+            if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(confirmPassword)
+                    || TextUtils.isEmpty(fullName)) {
                 showToast("Please fill in all fields.");
                 return;
             }
@@ -59,8 +69,10 @@ public class RegisterActivity extends AppCompatActivity {
             mAuth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
-                            showToast("Registration successful!");
-                            navigateToLogin();
+                            //String userId = mAuth.getCurrentUser().getUid();
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            if(user != null) {
+                            saveUserToFirestore(user.getUid(), fullName, email); }
                         } else {
                             showToast("Registration failed: " + task.getException().getMessage());
                         }
@@ -73,6 +85,24 @@ public class RegisterActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         });
+    }
+
+
+    private void saveUserToFirestore(String userId, String fullName, String email){
+        Map<String, Object> user = new HashMap<>();
+        user.put("fullName", fullName);
+        user.put("email", email);
+
+        db.collection("Users").document(userId)
+                .set(user)
+                .addOnCompleteListener(task -> {
+                    if(task.isSuccessful()){
+                        showToast("Registration successful!");
+                        navigateToLogin();
+                    } else {
+                        showToast("Registration failed: " + task.getException().getMessage());
+                    }
+                });
     }
 
     private void navigateToLogin() {
