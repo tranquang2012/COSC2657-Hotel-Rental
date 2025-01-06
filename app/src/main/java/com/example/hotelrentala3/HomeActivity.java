@@ -4,11 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -24,7 +20,6 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_home);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -35,13 +30,12 @@ public class HomeActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
-
         Button buttonLogout = findViewById(R.id.buttonLogout);
+        Button buttonChooseHotel = findViewById(R.id.buttonChooseHotel);
+        Button buttonCreateHotel = findViewById(R.id.buttonCreateHotel);
+
+        // Navigate to hotel selection activity when button is clicked
+        buttonChooseHotel.setOnClickListener(v -> navigateToHotelSelection());
 
         buttonLogout.setOnClickListener(v -> {
             FirebaseUser user = mAuth.getCurrentUser();
@@ -63,6 +57,21 @@ public class HomeActivity extends AppCompatActivity {
                 }
             }
         });
+
+        // Navigate to CreateHotelActivity
+        buttonCreateHotel.setOnClickListener(v -> navigateToCreateHotel());
+    }
+
+    // Navigate to HotelSelectionActivity
+    private void navigateToHotelSelection() {
+        Intent intent = new Intent(HomeActivity.this, HotelSelectionActivity.class);
+        startActivity(intent);
+    }
+
+    // Navigate to CreateHotelActivity
+    private void navigateToCreateHotel() {
+        Intent intent = new Intent(HomeActivity.this, CreateHotelActivity.class);
+        startActivity(intent);
     }
 
     // Navigate to LoginActivity

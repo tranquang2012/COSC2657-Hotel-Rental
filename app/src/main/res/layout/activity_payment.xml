@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textViewHotelName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Hotel Name"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:paddingBottom="8dp" />
+
+        <TextView
+            android:id="@+id/textViewHotelDetails"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Location: \nPrice Per Night: \nAvailable Rooms:"
+            android:textSize="14sp"
+            android:paddingBottom="16dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Enter Card Details"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:paddingBottom="8dp" />
+
+        <EditText
+            android:id="@+id/editTextCardNumber"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Card Number"
+            android:inputType="number"
+            android:background="?attr/editTextBackground"
+            android:padding="12dp"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/editTextCardValidFrom"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Valid From (MM/YY)"
+            android:inputType="text"
+            android:background="?attr/editTextBackground"
+            android:padding="12dp"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/editTextCardExpiry"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Expiration Date (MM/YY)"
+            android:inputType="text"
+            android:background="?attr/editTextBackground"
+            android:padding="12dp"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/editTextCVC"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="CVC"
+            android:inputType="numberPassword"
+            android:background="?attr/editTextBackground"
+            android:padding="12dp"
+            android:textSize="16sp" />
+
+        <!-- Payment Button -->
+        <Button
+            android:id="@+id/buttonMakePayment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Make Payment"
+            android:layout_marginTop="16dp" />
+    </LinearLayout>
+</ScrollView>
