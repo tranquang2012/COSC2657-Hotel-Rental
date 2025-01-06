@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">HotelRentalA3</string>
     <string name="default_web_client_id">272624475291-edg6iil97j6t9octfbcj1bshe2sustno.apps.googleusercontent.com</string>
+    <string name="title_activity_maps">MapsActivity</string>
 </resources>
