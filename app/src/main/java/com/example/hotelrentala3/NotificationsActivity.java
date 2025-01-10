@@ -1,5 +1,6 @@
 package com.example.hotelrentala3;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -37,11 +38,17 @@ public class NotificationsActivity extends AppCompatActivity {
 
         db.collection("promotions")
                 .whereLessThanOrEqualTo("from", now)
-                .whereGreaterThanOrEqualTo("until", now)
                 .get().addOnSuccessListener(queryDocumentSnapshots -> {
+                    if(queryDocumentSnapshots.isEmpty()) {
+                        showToast("There are no promotions currently.");
+                        return;
+                    }
                     List<Map<String, Object>> promotions = new ArrayList<>();
-                    for(DocumentSnapshot document : queryDocumentSnapshots) {
-                        promotions.add(document.getData());
+                    for (DocumentSnapshot document : queryDocumentSnapshots) {
+                        Timestamp until = document.getTimestamp("until");
+                        if (until != null && until.compareTo(now) >= 0) {
+                            promotions.add(document.getData());
+                        }
                     }
                     showPromotions(promotions);
                 }).addOnFailureListener(e -> {
@@ -63,23 +70,33 @@ public class NotificationsActivity extends AppCompatActivity {
 
             TextView titleText = new TextView(this);
             titleText.setText(title);
-            titleText.setTextSize(15);
+            titleText.setTextSize(20);
+            titleText.setTypeface(null, Typeface.BOLD);
 
             TextView contentText = new TextView(this);
             contentText.setText(content);
             contentText.setTextSize(15);
 
             TextView dateText = new TextView(this);
-            dateText.setText("Date: " + (startDate.toDate().toString()) + " ~ " + (endDate.toDate().toString()));
+            dateText.setText("From: " + (startDate.toDate().toString()));
             dateText.setTextSize(15);
+
+            TextView dateText2 = new TextView(this);
+            dateText2.setText("Until: " + (endDate.toDate().toString()));
+            dateText2.setTextSize(15);
 
             View line = new View(this);
             LinearLayout.LayoutParams lineParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 2);
+            line.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
+            lineParams.topMargin = 10;
+            lineParams.bottomMargin = 10;
             line.setLayoutParams(lineParams);
+
 
             promotionLayout.addView(titleText);
             promotionLayout.addView(contentText);
             promotionLayout.addView(dateText);
+            promotionLayout.addView(dateText2);
             promotionLayout.addView(line);
 
             promotionsLayout.addView(promotionLayout);

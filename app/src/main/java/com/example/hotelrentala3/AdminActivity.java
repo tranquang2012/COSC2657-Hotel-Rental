@@ -1,5 +1,6 @@
 package com.example.hotelrentala3;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,7 +18,12 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.sql.Time;
@@ -31,6 +37,8 @@ import java.util.zip.Inflater;
 
 public class AdminActivity extends AppCompatActivity {
     private FirebaseFirestore db;
+    private FirebaseAuth mAuth;
+    private GoogleSignInClient mGoogleSignInClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,10 +48,17 @@ public class AdminActivity extends AppCompatActivity {
         }
         setContentView(R.layout.activity_admin);
 
-
+        mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
 
-        Button addPromotionBtn = findViewById(R.id.addPromitionBtn);
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
+
+        Button addPromotionBtn = findViewById(R.id.addPromotionBtn);
         Button addCouponBtn = findViewById(R.id.addCouponBtn);
 
         addPromotionBtn.setOnClickListener(new View.OnClickListener() {
@@ -59,6 +74,36 @@ public class AdminActivity extends AppCompatActivity {
                 showCouponWindow();
             }
         });
+
+        Button buttonLogout = findViewById(R.id.buttonLogout);
+
+        buttonLogout.setOnClickListener(v -> {
+            FirebaseUser user = mAuth.getCurrentUser();
+
+            if (user != null) {
+                // Check if the user is signed in with Google
+                if (user.getProviderData().stream().anyMatch(profile -> profile.getProviderId().equals("google.com"))) {
+                    // Sign out from Google
+                    mGoogleSignInClient.signOut()
+                            .addOnCompleteListener(this, task -> {
+                                // Sign out from Firebase
+                                mAuth.signOut();
+                                navigateToLogin();
+                            });
+                } else {
+                    // If signed in with email/password, just sign out from Firebase
+                    mAuth.signOut();
+                    navigateToLogin();
+                }
+            }
+        });
+    }
+
+    private void navigateToLogin() {
+        Intent intent = new Intent(AdminActivity.this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
     }
 
     private void showPromotionWindow() {

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -108,9 +109,19 @@ public class HomeActivity extends AppCompatActivity {
 
         db.collection("promotions")
                 .whereLessThanOrEqualTo("from", now)
-                .whereGreaterThanOrEqualTo("until", now).get()
+                .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    int promotionCount = queryDocumentSnapshots.size();
+                    Log.d("onSuccessTriggered", "aaa");
+                    List<Map<String, Object>> promotions = new ArrayList<>();
+                    for (DocumentSnapshot document : queryDocumentSnapshots) {
+                        Timestamp until = document.getTimestamp("until");
+
+                        if (until != null && until.compareTo(now) >= 0) {
+                            promotions.add(document.getData());
+                        }
+                    }
+                    int promotionCount = promotions.size();
+                    Log.d("promotionCount", String.valueOf(promotionCount));
                     if (promotionCount > 0) {
                         showNotification(promotionCount);
                     }
@@ -121,8 +132,14 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void showNotification(int promotionCount) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1);
+            }
+        }
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         if(Build.VERSION.SDK_INT < 26) {
+            Log.d("showNotif1", "aaa");
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
                     .setSmallIcon(android.R.drawable.ic_dialog_info)
                     .setContentTitle("Promotions")
@@ -131,6 +148,7 @@ public class HomeActivity extends AppCompatActivity {
 
             notificationManager.notify(1, builder.build());
         } else {
+            Log.d("showNotif2", "NotificationManager: " + (notificationManager != null ? "Not null" : "Null"));
             String channelId = "promotions_channel";
             String channelName = "Promotions notifications";
             NotificationChannel channel = new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_DEFAULT);
@@ -142,6 +160,7 @@ public class HomeActivity extends AppCompatActivity {
                     .setContentText(promotionCount + " promotions are available. Check them out in the notifications section!")
                     .setPriority(NotificationCompat.PRIORITY_DEFAULT);
             notificationManager.notify(1, builder.build());
+            Log.d("showNotif3", "ccc");
         }
     }
 
