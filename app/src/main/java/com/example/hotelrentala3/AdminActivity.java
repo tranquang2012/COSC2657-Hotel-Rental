@@ -52,6 +52,7 @@ public class AdminActivity extends AppCompatActivity {
 
         Button addPromotionBtn = findViewById(R.id.addPromotionBtn);
         Button addCouponBtn = findViewById(R.id.addCouponBtn);
+        Button addHotelBtn = findViewById(R.id.addHotelBtn);
 
         addPromotionBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,6 +66,13 @@ public class AdminActivity extends AppCompatActivity {
             public void onClick(View view) {
                 showCouponWindow();
             }
+        });
+
+        addHotelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showHotelWindow();
+            };
         });
 
         Button buttonLogout = findViewById(R.id.buttonLogout);
@@ -169,7 +177,54 @@ public class AdminActivity extends AppCompatActivity {
         });
     }
 
-    public void showCouponWindow() {
+    private void showHotelWindow() {
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View dialogView = inflater.inflate(R.layout.popup_hotel, null);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(dialogView);
+
+        EditText nameEditText = dialogView.findViewById(R.id.hotelName);
+        EditText descriptionEditText = dialogView.findViewById(R.id.hotelDescription);
+        EditText priceEditText = dialogView.findViewById(R.id.hotelPrice);
+
+        builder.setPositiveButton("Add", (dialog, which) -> {
+            String name = nameEditText.getText().toString();
+            String description = descriptionEditText.getText().toString();
+            String price = priceEditText.getText().toString();
+            if(!name.isEmpty() && !description.isEmpty() && !price.isEmpty()) {
+                try {
+                    int intPrice = Integer.parseInt(price);
+                    addHotel(name, description, intPrice);
+                } catch(NumberFormatException e) {
+                    showToast("Price must be a valid number");
+                }
+            } else {
+                showToast("One of the field is empty.");
+            }
+        });
+
+        builder.setNegativeButton("Cancel", (dialog, which) -> {
+            dialog.dismiss();
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void addHotel(String name, String description, int price) {
+        Map<String, Object> hotel = new HashMap<>();
+        hotel.put("hotelName", name);
+        hotel.put("hotelDescription", description);
+        hotel.put("hotelPrice", price);
+
+        db.collection("Hotels").add(hotel).addOnSuccessListener(documentReference -> {
+            showToast("Hotel added successfully.");
+        }).addOnFailureListener(e -> {
+            showToast("Failed to add hotel.");
+        });
+    }
+
+    private void showCouponWindow() {
         LayoutInflater inflater = LayoutInflater.from(this);
         View dialogView = inflater.inflate(R.layout.popup_coupon, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
