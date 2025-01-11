@@ -2,8 +2,11 @@ package com.example.hotelrentala3;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,12 +21,14 @@ import java.util.Map;
 public class PaymentActivity extends AppCompatActivity {
 
     private EditText editTextCardNumber, editTextValidFrom, editTextExpirationDate, editTextCVC;
+    private Spinner spinnerCardType;
     private Button buttonPay;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
 
     private String selectedHotelId;
     private double hotelPrice;
+    private String selectedCardType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +42,7 @@ public class PaymentActivity extends AppCompatActivity {
         editTextValidFrom = findViewById(R.id.editTextCardValidFrom);
         editTextExpirationDate = findViewById(R.id.editTextCardExpiry);
         editTextCVC = findViewById(R.id.editTextCVC);
+        spinnerCardType = findViewById(R.id.spinnerCardType);
         buttonPay = findViewById(R.id.buttonMakePayment);
 
         selectedHotelId = getIntent().getStringExtra("selectedHotelId");
@@ -47,6 +53,20 @@ public class PaymentActivity extends AppCompatActivity {
             fetchHotelData(selectedHotelId);
         }
 
+        // Handle Spinner selection
+        spinnerCardType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selectedCardType = parent.getItemAtPosition(position).toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                selectedCardType = null;
+            }
+        });
+
+        // Handle Pay button click
         buttonPay.setOnClickListener(v -> processPayment());
     }
 
@@ -74,12 +94,13 @@ public class PaymentActivity extends AppCompatActivity {
 
         // Validate input fields
         if (TextUtils.isEmpty(cardNumber) || TextUtils.isEmpty(validFrom) ||
-                TextUtils.isEmpty(expirationDate) || TextUtils.isEmpty(cvc)) {
+                TextUtils.isEmpty(expirationDate) || TextUtils.isEmpty(cvc) ||
+                TextUtils.isEmpty(selectedCardType)) {
             showToast("Please fill in all fields.");
             return;
         }
 
-        // fetch the credit card data from Firestore (based on card number)
+        // Fetch the credit card data from Firestore
         fetchCreditCardData(cardNumber, validFrom, expirationDate, cvc);
     }
 
@@ -90,6 +111,7 @@ public class PaymentActivity extends AppCompatActivity {
                 .whereEqualTo("validFrom", validFrom)
                 .whereEqualTo("expirationDate", expirationDate)
                 .whereEqualTo("cvc", cvc)
+                .whereEqualTo("cardType", selectedCardType)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     if (!queryDocumentSnapshots.isEmpty()) {
@@ -142,7 +164,6 @@ public class PaymentActivity extends AppCompatActivity {
                 .addOnSuccessListener(aVoid -> showToast("Payment successful!"))
                 .addOnFailureListener(e -> showToast("Error recording transaction: " + e.getMessage()));
     }
-
     private void showToast(String message) {
         Toast.makeText(PaymentActivity.this, message, Toast.LENGTH_SHORT).show();
     }
