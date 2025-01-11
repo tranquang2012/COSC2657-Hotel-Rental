@@ -1,35 +1,117 @@
 package com.example.hotelrentala3;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import com.google.android.gms.maps.*;
-import com.google.android.gms.maps.model.*;
-import com.google.firebase.firestore.*;
+
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+
+import java.util.HashMap;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private FirebaseFirestore db;
+    private final HashMap<Marker, String> markerDetailsMap = new HashMap<>();
+    private final HashMap<Marker, String> markerNamesMap = new HashMap<>();
+    private final HashMap<Marker, LatLng> markerLocationMap = new HashMap<>();
+    private static final String TAG = "MapsActivity";
+
+    private BottomSheetBehavior<LinearLayout> bottomSheetBehavior;
+    private TextView hotelNameTextView;
+    private TextView hotelDetailsTextView;
+    private ImageButton btnGetDirections, buttonGoogleMaps;
+    private LatLng selectedHotelLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-        // Initialize Firebase
         db = FirebaseFirestore.getInstance();
 
-        // Load Map Fragment
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.mapFragment);
+        LinearLayout bottomSheet = findViewById(R.id.bottomSheet);
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+
+        hotelNameTextView = findViewById(R.id.hotelName);
+        hotelDetailsTextView = findViewById(R.id.hotelDetails);
+        btnGetDirections = findViewById(R.id.btnGetDirections);
+        buttonGoogleMaps = findViewById(R.id.buttonGoogleMaps);
+
+        bottomSheet.setNestedScrollingEnabled(true);
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        bottomSheetBehavior.setPeekHeight(getResources().getDimensionPixelSize(R.dimen.bottom_sheet_peek_height));
+        bottomSheetBehavior.setHideable(false);
+
+        hotelDetailsTextView.setMovementMethod(new android.text.method.ScrollingMovementMethod());
+        hotelNameTextView.setOnClickListener(v -> {
+            bottomSheetBehavior.setPeekHeight(getResources().getDimensionPixelSize(R.dimen.bottom_sheet_expanded_height));
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        });
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapFragment);
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
         }
+
+        EditText searchBar = findViewById(R.id.searchBar);
+        searchBar.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filterMarkers(s.toString());
+            }
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
+        btnGetDirections.setOnClickListener(v -> {
+            if (selectedHotelLocation != null) {
+                Uri gmmIntentUri = Uri.parse("google.navigation:q=" + selectedHotelLocation.latitude + "," + selectedHotelLocation.longitude);
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                mapIntent.setPackage("com.google.android.apps.maps");
+                if (mapIntent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(mapIntent);
+                }
+            }
+        });
+
+        buttonGoogleMaps.setOnClickListener(v -> {
+            if (selectedHotelLocation != null) {
+                Uri gmmIntentUri = Uri.parse("geo:" + selectedHotelLocation.latitude + "," + selectedHotelLocation.longitude + "?q=" + selectedHotelLocation.latitude + "," + selectedHotelLocation.longitude);
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                mapIntent.setPackage("com.google.android.apps.maps");
+                if (mapIntent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(mapIntent);
+                }
+            }
+        });
     }
 
     @Override
@@ -37,78 +119,83 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
-        // Set default camera to Sydney
-        LatLng sydney = new LatLng(-33.8688, 151.2093); // Sydney coordinates
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 12));
+        LatLng defaultLocation = new LatLng(-33.8688, 151.2093);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 12));
 
-        // Fetch hotel data from Firebase
-        db.collection("TestHotel").get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
+        fetchHotelData();
 
-                for (QueryDocumentSnapshot document : task.getResult()) {
-                    if (document.contains("latitude") && document.contains("longitude") &&
-                            document.contains("name") && document.contains("price") &&
-                            document.contains("availability") && document.contains("rating")) {
-
-                        double lat = document.getDouble("latitude");
-                        double lng = document.getDouble("longitude");
-                        String name = document.getString("name");
-                        long price = document.getLong("price");
-                        double rating = document.getDouble("rating");
-                        boolean availability = document.getBoolean("availability");
-
-                        // Create a marker for each hotel
-                        LatLng location = new LatLng(lat, lng);
-                        MarkerOptions markerOptions = new MarkerOptions()
-                                .position(location)
-                                .title(name)
-                                .snippet(
-                                        "Price: " + price + " VND\n" +
-                                                "Rating: " + rating + "\n" +
-                                                "Available: " + (availability ? "Yes" : "No")
-                                )
-                                .icon(BitmapDescriptorFactory.defaultMarker(
-                                        availability ? BitmapDescriptorFactory.HUE_GREEN : BitmapDescriptorFactory.HUE_RED
-                                ));
-
-                        mMap.addMarker(markerOptions);
-                        boundsBuilder.include(location);
-                    }
-                }
-
-                // Adjust camera to fit all markers if any exist
-                if (!task.getResult().isEmpty()) {
-                    mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), 100));
-                }
-            } else {
-                // Log any errors
-                task.getException().printStackTrace();
-            }
-        });
-
-        // Enable marker click listener for interactivity
         mMap.setOnMarkerClickListener(marker -> {
-            showHotelDialog(marker.getTitle(), marker.getSnippet());
+            String details = markerDetailsMap.get(marker);
+            String name = marker.getTitle();
+            selectedHotelLocation = markerLocationMap.get(marker);
+            if (details != null && name != null) {
+                showHotelDetails(name, details);
+            }
             return true;
         });
     }
 
-    private void showHotelDialog(String name, String details) {
-        // Inflate the dialog layout
-        View dialogView = getLayoutInflater().inflate(R.layout.dialog_hotel_info, null);
+    private void fetchHotelData() {
+        db.collection("TestHotel")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            Boolean availability = document.getBoolean("availability");
+                            if (availability != null && availability) {  // Only show available hotels
+                                Double latitude = document.getDouble("latitude");
+                                Double longitude = document.getDouble("longitude");
+                                String name = document.getString("name");
+                                Double price = document.getDouble("price");
+                                Double rating = document.getDouble("rating");  // Fetch rating
 
-        // Set hotel details in the dialog
-        TextView nameTextView = dialogView.findViewById(R.id.hotelName);
-        TextView detailsTextView = dialogView.findViewById(R.id.hotelPrice);
+                                if (latitude != null && longitude != null && name != null) {
+                                    LatLng location = new LatLng(latitude, longitude);
+                                    Marker marker = mMap.addMarker(new MarkerOptions()
+                                            .position(location)
+                                            .title(name)
+                                            .icon(BitmapDescriptorFactory.fromBitmap(createCustomMarker(String.valueOf(price))))
+                                    );
 
-        nameTextView.setText(name);
-        detailsTextView.setText(details);
+                                    if (marker != null) {
+                                        String hotelDetails = "Price: $" + price;
+                                        if (rating != null) {
+                                            hotelDetails += "\nRating: " + rating + " ⭐";  // Add rating to details
+                                        }
+                                        markerDetailsMap.put(marker, hotelDetails);
+                                        markerNamesMap.put(marker, name);
+                                        markerLocationMap.put(marker, location);
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        Log.e(TAG, "Error fetching hotels: ", task.getException());
+                    }
+                });
+    }
 
-        // Show the dialog
-        new AlertDialog.Builder(this)
-                .setView(dialogView)
-                .setPositiveButton("Close", (dialog, which) -> dialog.dismiss())
-                .show();
+    private Bitmap createCustomMarker(String price) {
+        View markerView = LayoutInflater.from(this).inflate(R.layout.custom_marker, null);
+        TextView priceTextView = markerView.findViewById(R.id.marker_price);
+        priceTextView.setText("$" + price);
+        markerView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        markerView.layout(0, 0, markerView.getMeasuredWidth(), markerView.getMeasuredHeight());
+        Bitmap bitmap = Bitmap.createBitmap(markerView.getMeasuredWidth(), markerView.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        markerView.draw(canvas);
+        return bitmap;
+    }
+
+    private void showHotelDetails(String name, String details) {
+        hotelNameTextView.setText(name);
+        hotelDetailsTextView.setText(details);
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+    }
+
+    private void filterMarkers(String query) {
+        for (Marker marker : markerNamesMap.keySet()) {
+            marker.setVisible(marker.getTitle().toLowerCase().contains(query.toLowerCase()));
+        }
     }
 }
