@@ -20,11 +20,11 @@
 
             <!-- Logo Section -->
             <ImageView
-                android:id="@+id/logo"
+                android:id="@+id/banner"
                 android:layout_width="match_parent"
                 android:layout_height="120dp"
-                android:src="@drawable/ic_logo"
-                android:contentDescription="Logo"
+                android:src="@drawable/banner"
+                android:contentDescription="Banner"
                 android:scaleType="centerInside" />
 
             <!-- Destination Section -->
@@ -45,10 +45,10 @@
                 <EditText
                     android:id="@+id/destination_input"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Destination or hotel"
+                    android:layout_height="48dp"
                     android:layout_marginStart="8dp"
                     android:background="@null"
+                    android:hint="Destination or hotel"
                     android:textSize="16sp" />
             </LinearLayout>
 
