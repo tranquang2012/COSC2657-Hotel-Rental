@@ -21,7 +21,8 @@
         android:hint="Number of Nights"
         android:inputType="number"
         android:importantForAccessibility="yes"
-        android:contentDescription="Number of Nights" />
+        android:contentDescription="Number of Nights"
+        android:layout_marginTop="12dp" />
 
     <TextView
         android:id="@+id/textViewCheckInDate"
@@ -35,7 +36,7 @@
         android:textColor="@android:color/holo_blue_dark"
         android:importantForAccessibility="yes"
         android:contentDescription="Check-in Date, clickable"
-        android:onClick="showDatePickerDialog"/>
+        android:onClick="showDatePickerDialog" />
 
     <EditText
         android:id="@+id/editTextCheckInDate"
@@ -45,7 +46,18 @@
         android:focusable="false"
         android:clickable="false"
         android:importantForAccessibility="yes"
-        android:contentDescription="Selected Check-in Date" />
+        android:contentDescription="Selected Check-in Date"
+        android:layout_marginTop="8dp" />
+
+    <EditText
+        android:id="@+id/editTextCouponCode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Coupon Code (optional)"
+        android:inputType="text"
+        android:importantForAccessibility="yes"
+        android:contentDescription="Coupon Code"
+        android:layout_marginTop="12dp" />
 
     <TextView
         android:id="@+id/textViewPrice"
@@ -58,12 +70,21 @@
         android:contentDescription="Total Price" />
 
     <Button
+        android:id="@+id/buttonApplyCoupon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Apply Coupon"
+        android:importantForAccessibility="yes"
+        android:contentDescription="Apply Coupon"
+        android:layout_marginTop="24dp" />
+
+    <Button
         android:id="@+id/buttonNext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Confirm Booking"
         android:importantForAccessibility="yes"
         android:contentDescription="Confirm Booking Button"
-        android:layout_marginTop="24dp"/>
+        android:layout_marginTop="10dp" />
 
 </LinearLayout>

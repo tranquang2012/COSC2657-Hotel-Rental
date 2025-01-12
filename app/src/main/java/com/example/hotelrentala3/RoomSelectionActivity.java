@@ -21,9 +21,9 @@ import java.util.Calendar;
 
 public class RoomSelectionActivity extends AppCompatActivity {
 
-    private EditText editTextCheckInDate, editTextNumberOfNights;
+    private EditText editTextCheckInDate, editTextNumberOfNights, editTextCouponCode;
     private Spinner spinnerRoomType;
-    private Button buttonNext;
+    private Button buttonNext, buttonApplyCoupon;
     private TextView textViewPrice;
     private FirebaseFirestore db;
 
@@ -32,6 +32,7 @@ public class RoomSelectionActivity extends AppCompatActivity {
     private String selectedRoomType;
     private int numberOfNights = 0;
     private String checkInDate;
+    private double discount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +47,10 @@ public class RoomSelectionActivity extends AppCompatActivity {
 
         editTextCheckInDate = findViewById(R.id.editTextCheckInDate);
         editTextNumberOfNights = findViewById(R.id.editTextNumberOfNights);
+        editTextCouponCode = findViewById(R.id.editTextCouponCode);
         spinnerRoomType = findViewById(R.id.spinnerRoomType);
         buttonNext = findViewById(R.id.buttonNext);
+        buttonApplyCoupon = findViewById(R.id.buttonApplyCoupon);
         textViewPrice = findViewById(R.id.textViewPrice);
 
         selectedHotelId = getIntent().getStringExtra("selectedHotelId");
@@ -75,9 +78,7 @@ public class RoomSelectionActivity extends AppCompatActivity {
 
         editTextNumberOfNights.addTextChangedListener(new android.text.TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -85,9 +86,10 @@ public class RoomSelectionActivity extends AppCompatActivity {
             }
 
             @Override
-            public void afterTextChanged(android.text.Editable s) {
-            }
+            public void afterTextChanged(android.text.Editable s) {}
         });
+
+        buttonApplyCoupon.setOnClickListener(v -> applyCoupon());
 
         buttonNext.setOnClickListener(v -> processRoomSelection());
     }
@@ -128,11 +130,17 @@ public class RoomSelectionActivity extends AppCompatActivity {
 
             double roomTypeMultiplier = getRoomTypeMultiplier(selectedRoomType);
 
-            double totalPrice = hotelPrice * numberOfNights * roomTypeMultiplier;
+            double totalPriceBeforeDiscount = hotelPrice * numberOfNights * roomTypeMultiplier;
+            double finalPrice = totalPriceBeforeDiscount - discount;
 
-            textViewPrice.setText(String.format("Total Price: $%.2f", totalPrice));
+            if (finalPrice < 0) {
+                finalPrice = 0;
+            }
+
+            textViewPrice.setText(String.format("Total Price: $%.2f", finalPrice));
         }
     }
+
 
     private double getRoomTypeMultiplier(String roomType) {
         if ("Single Room".equalsIgnoreCase(roomType)) {
@@ -144,6 +152,59 @@ public class RoomSelectionActivity extends AppCompatActivity {
         }
         return 0.0;
     }
+
+    private void applyCoupon() {
+        String couponCode = editTextCouponCode.getText().toString().trim();
+        if (TextUtils.isEmpty(couponCode)) {
+
+            discount = 0;
+            updatePrice();
+            showToast("No coupon applied.");
+            return;
+        }
+
+        // fetch coupon details from Firestore
+        db.collection("coupons")
+                .whereEqualTo("code", couponCode)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        String discountString = queryDocumentSnapshots.getDocuments().get(0).getString("discount");
+                        try {
+                            double couponDiscount = Double.parseDouble(discountString);
+                            applyDiscountLogic(couponDiscount);
+                            showToast("Coupon applied successfully!");
+                        } catch (NumberFormatException e) {
+                            showToast("Invalid discount value in coupon.");
+                            discount = 0;
+                            updatePrice();
+                        }
+                    } else {
+                        discount = 0;
+                        updatePrice();
+                        showToast("Invalid coupon code.");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    discount = 0;
+                    updatePrice();
+                    showToast("Error fetching coupon data: " + e.getMessage());
+                });
+    }
+
+    private void applyDiscountLogic(double couponDiscount) {
+        double totalPriceBeforeDiscount = hotelPrice * numberOfNights * getRoomTypeMultiplier(selectedRoomType);
+
+        if (couponDiscount >= totalPriceBeforeDiscount) {
+            // if the discount is greater than or equal to total price, apply a 50% discount instead
+            discount = totalPriceBeforeDiscount / 2;
+        } else {
+            // full discount
+            discount = couponDiscount;
+        }
+        updatePrice();
+    }
+
 
     private void processRoomSelection() {
         String nightsStr = editTextNumberOfNights.getText().toString();
@@ -164,17 +225,21 @@ public class RoomSelectionActivity extends AppCompatActivity {
             return;
         }
 
-        // price calculation
         double roomTypeMultiplier = getRoomTypeMultiplier(selectedRoomType);
-        double totalPrice = hotelPrice * numberOfNights * roomTypeMultiplier;
+        double totalPriceBeforeDiscount = hotelPrice * numberOfNights * roomTypeMultiplier;
+        double finalPrice = totalPriceBeforeDiscount - discount;
 
-        // pass the data and go to payment
+        // make sure finalPrice is non-negative
+        if (finalPrice < 0) {
+            finalPrice = 0;
+        }
+
         Intent intent = new Intent(this, PaymentActivity.class);
         intent.putExtra("selectedHotelId", selectedHotelId);
         intent.putExtra("selectedRoomType", selectedRoomType);
         intent.putExtra("checkInDate", checkInDate);
         intent.putExtra("numberOfNights", numberOfNights);
-        intent.putExtra("totalPrice", totalPrice);
+        intent.putExtra("finalPrice", finalPrice);
         startActivity(intent);
     }
 

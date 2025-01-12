@@ -30,7 +30,7 @@ public class PaymentActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private String selectedHotelId;
-    private double totalPrice;
+    private double finalPrice;
     private String selectedCardType;
 
     @Override
@@ -53,9 +53,9 @@ public class PaymentActivity extends AppCompatActivity {
         buttonPay = findViewById(R.id.buttonMakePayment);
 
         selectedHotelId = getIntent().getStringExtra("selectedHotelId");
-        totalPrice = getIntent().getDoubleExtra("totalPrice", 0.0);
+        finalPrice = getIntent().getDoubleExtra("finalPrice", 0.0);
 
-        if (selectedHotelId == null || totalPrice <= 0.0) {
+        if (selectedHotelId == null || finalPrice <= 0.0) {
             showToast("Invalid booking details. Please try again.");
             finish();
         }
@@ -106,7 +106,7 @@ public class PaymentActivity extends AppCompatActivity {
                         DocumentSnapshot cardDocument = queryDocumentSnapshots.getDocuments().get(0);
                         Double balance = cardDocument.getDouble("balance");
 
-                        if (balance != null && balance >= totalPrice) {
+                        if (balance != null && balance >= finalPrice) {
                             showConfirmationDialog(cardDocument, balance);
                         } else {
                             showToast("Insufficient balance.");
@@ -124,14 +124,14 @@ public class PaymentActivity extends AppCompatActivity {
 
         String confirmationMessage =
                 "Card Type: " + selectedCardType + "\n" +
-                "Amount: $" + totalPrice + "\n" +
+                "Amount: $" + finalPrice + "\n" +
                 "Card Number: " + editTextCardNumber.getText().toString() + "\n\n" +
                 "Do you want to confirm the payment?";
 
         builder.setMessage(confirmationMessage);
 
         builder.setPositiveButton("Confirm", (dialog, which) -> {
-            updateCardBalance(cardDocument.getId(), balance - totalPrice);
+            updateCardBalance(cardDocument.getId(), balance - finalPrice);
             dialog.dismiss();
         });
 
@@ -166,7 +166,7 @@ public class PaymentActivity extends AppCompatActivity {
             transaction.put("selectedRoomType", getIntent().getStringExtra("selectedRoomType"));
             transaction.put("checkInDate", getIntent().getStringExtra("checkInDate"));
             transaction.put("numberOfNights", getIntent().getIntExtra("numberOfNights", 0));
-            transaction.put("totalPrice", totalPrice);
+            transaction.put("finalPrice", finalPrice);
             transaction.put("timestamp", System.currentTimeMillis());
             transaction.put("status", "Completed");
 
