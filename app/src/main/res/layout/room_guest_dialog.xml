@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Persons Section -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingVertical="8dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Persons"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/btn_decrement_persons"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/square_button_background"
+            android:text="-"
+            android:textSize="18sp"
+            android:textColor="@android:color/white" />
+
+        <TextView
+            android:id="@+id/tv_persons_count"
+            android:layout_width="100dp"
+            android:layout_height="48dp"
+            android:layout_marginHorizontal="8dp"
+            android:text="1"
+            android:gravity="center"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/btn_increment_persons"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/square_button_background"
+            android:text="+"
+            android:textSize="18sp"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
+
+    <!-- Rooms -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingVertical="8dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Rooms"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/btn_decrement_rooms"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/square_button_background"
+            android:text="-"
+            android:textSize="18sp"
+            android:textColor="@android:color/white" />
+
+        <TextView
+            android:id="@+id/tv_rooms_count"
+            android:layout_width="100dp"
+            android:layout_height="48dp"
+            android:layout_marginHorizontal="8dp"
+            android:text="1"
+            android:gravity="center"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/btn_increment_rooms"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/square_button_background"
+            android:text="+"
+            android:textSize="18sp"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
+
+    <!-- Done Button -->
+    <Button
+        android:id="@+id/btn_done"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Done"
+        android:layout_marginTop="16dp" />
+</LinearLayout>

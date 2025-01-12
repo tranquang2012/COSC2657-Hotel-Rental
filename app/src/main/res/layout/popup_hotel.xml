@@ -50,4 +50,10 @@
         android:hint="hotel price"
         android:inputType="number"/>
 
+<!--    <Button-->
+<!--        android:id="@+id/selectImageBtn"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Select image"/>-->
+
 </LinearLayout>
