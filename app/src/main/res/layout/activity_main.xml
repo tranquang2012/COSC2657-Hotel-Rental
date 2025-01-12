@@ -48,7 +48,7 @@
                     android:layout_height="48dp"
                     android:layout_marginStart="8dp"
                     android:background="@null"
-                    android:hint="Destination or hotel"
+                    android:hint="Destination"
                     android:textSize="16sp" />
             </LinearLayout>
 
