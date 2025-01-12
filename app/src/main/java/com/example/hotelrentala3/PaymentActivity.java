@@ -28,7 +28,7 @@ public class PaymentActivity extends AppCompatActivity {
     private FirebaseFirestore db;
 
     private String selectedHotelId;
-    private double hotelPrice;
+    private double totalPrice;
     private String selectedCardType;
 
     @Override
@@ -47,14 +47,13 @@ public class PaymentActivity extends AppCompatActivity {
         buttonPay = findViewById(R.id.buttonMakePayment);
 
         selectedHotelId = getIntent().getStringExtra("selectedHotelId");
-        if (selectedHotelId == null) {
-            showToast("Hotel not selected. Please try again.");
+        totalPrice = getIntent().getDoubleExtra("totalPrice", 0.0);
+
+        if (selectedHotelId == null || totalPrice <= 0.0) {
+            showToast("Invalid booking details. Please try again.");
             finish();
-        } else {
-            fetchHotelData(selectedHotelId);
         }
 
-        // Handle Spinner selection
         spinnerCardType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -67,26 +66,9 @@ public class PaymentActivity extends AppCompatActivity {
             }
         });
 
-        // Handle Pay button click
         buttonPay.setOnClickListener(v -> processPayment());
     }
 
-    // fetch the hotel price from Firestore using the hotel ID
-    private void fetchHotelData(String hotelId) {
-        db.collection("TestHotel")
-                .document(hotelId)
-                .get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        hotelPrice = documentSnapshot.getDouble("price");
-                    } else {
-                        showToast("Hotel not found.");
-                    }
-                })
-                .addOnFailureListener(e -> showToast("Error fetching hotel data: " + e.getMessage()));
-    }
-
-    // do the payment when the user clicks the Pay button
     private void processPayment() {
         String cardNumber = editTextCardNumber.getText().toString();
         String validFrom = editTextValidFrom.getText().toString();
@@ -105,7 +87,6 @@ public class PaymentActivity extends AppCompatActivity {
         fetchCreditCardData(cardNumber, validFrom, expirationDate, cvc);
     }
 
-    // fetch the credit card data from Firestore
     private void fetchCreditCardData(String cardNumber, String validFrom, String expirationDate, String cvc) {
         db.collection("CreditCards")
                 .whereEqualTo("cardNumber", cardNumber)
@@ -119,9 +100,9 @@ public class PaymentActivity extends AppCompatActivity {
                         DocumentSnapshot cardDocument = queryDocumentSnapshots.getDocuments().get(0);
                         Double balance = cardDocument.getDouble("balance");
 
-                        if (balance != null && balance >= hotelPrice) {
+                        if (balance != null && balance >= totalPrice) {
                             // if enough money, proceed with the payment process
-                            processTransaction(cardDocument, balance - hotelPrice);
+                            updateCardBalance(cardDocument.getId(), balance - totalPrice);
                         } else {
                             showToast("Insufficient balance.");
                         }
@@ -132,12 +113,6 @@ public class PaymentActivity extends AppCompatActivity {
                 .addOnFailureListener(e -> showToast("Error fetching credit card data: " + e.getMessage()));
     }
 
-    // process the payment by updating card's balance
-    private void processTransaction(DocumentSnapshot cardDocument, double newCardBalance) {
-        updateCardBalance(cardDocument.getId(), newCardBalance);
-    }
-
-    // update the balance in the CreditCards collection
     private void updateCardBalance(String cardDocumentId, double newCardBalance) {
         db.collection("CreditCards")
                 .document(cardDocumentId)
@@ -152,28 +127,38 @@ public class PaymentActivity extends AppCompatActivity {
     private void recordTransaction() {
         String userId = mAuth.getCurrentUser().getUid();
 
-        Map<String, Object> transaction = new HashMap<>();
-        transaction.put("userId", userId);
-        transaction.put("hotelId", selectedHotelId);
-        transaction.put("amount", hotelPrice);
-        transaction.put("timestamp", System.currentTimeMillis());
-        transaction.put("status", "Completed");
+        db.collection("Users").document(userId).get().addOnSuccessListener(documentSnapshot -> {
+            String fullName = documentSnapshot.getString("fullName");
 
-        db.collection("BookingHistory")
-                .add(transaction)
-                .addOnSuccessListener(aVoid -> {
-                    showToast("Payment successful!");
-                    updateHotelAvailability();
-                })
-                .addOnFailureListener(e -> showToast("Error recording transaction: " + e.getMessage()));
+            Map<String, Object> transaction = new HashMap<>();
+            transaction.put("userId", userId);
+            transaction.put("fullName", fullName);
+            transaction.put("hotelId", selectedHotelId);
+            transaction.put("selectedRoomType", getIntent().getStringExtra("selectedRoomType"));
+            transaction.put("checkInDate", getIntent().getStringExtra("checkInDate"));
+            transaction.put("numberOfNights", getIntent().getIntExtra("numberOfNights", 0));
+            transaction.put("totalPrice", totalPrice);
+            transaction.put("timestamp", System.currentTimeMillis());
+            transaction.put("status", "Completed");
+
+            db.collection("BookingHistory")
+                    .add(transaction)
+                    .addOnSuccessListener(aVoid -> {
+                        showToast("Payment successful!");
+                        updateHotelAvailability();
+                    })
+                    .addOnFailureListener(e -> showToast("Error recording transaction: " + e.getMessage()));
+        }).addOnFailureListener(e -> showToast("Error fetching user details: " + e.getMessage()));
     }
+
     private void updateHotelAvailability() {
         db.collection("TestHotel")
                 .document(selectedHotelId)
-                .update("availability", FieldValue.increment(-1)) // update hotel's availability
+                .update("availability", FieldValue.increment(-1))
                 .addOnSuccessListener(aVoid -> showToast("Hotel availability updated."))
                 .addOnFailureListener(e -> showToast("Error updating hotel availability: " + e.getMessage()));
     }
+
     private void showToast(String message) {
         Toast.makeText(PaymentActivity.this, message, Toast.LENGTH_SHORT).show();
     }

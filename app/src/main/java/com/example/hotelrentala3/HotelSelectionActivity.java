@@ -2,7 +2,6 @@ package com.example.hotelrentala3;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -42,7 +41,7 @@ public class HotelSelectionActivity extends AppCompatActivity {
             String selectedHotelId = selectedHotel.getId();
 
             // proceed to payment with selected hotel details
-            Intent intent = new Intent(HotelSelectionActivity.this, PaymentActivity.class);
+            Intent intent = new Intent(HotelSelectionActivity.this, RoomSelectionActivity.class);
             intent.putExtra("selectedHotelId", selectedHotelId);
             startActivity(intent);
         });

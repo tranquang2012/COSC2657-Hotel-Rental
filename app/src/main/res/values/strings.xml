@@ -12,4 +12,9 @@
         <item>MasterCard</item>
         <item>JCB</item>
     </string-array>
+    <string-array name="room_type_options">
+        <item>Single Room</item>
+        <item>Double Room</item>
+        <item>Suite</item>
+    </string-array>
 </resources>

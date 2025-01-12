@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <Spinner
+        android:id="@+id/spinnerRoomType"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/room_type_options" />
+
+    <EditText
+        android:id="@+id/editTextNumberOfNights"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Number of Nights"
+        android:inputType="number"
+        android:importantForAccessibility="yes"
+        android:contentDescription="Number of nights" />
+
+    <TextView
+        android:id="@+id/textViewCheckInDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Select Check-in Date"
+        android:textSize="16sp"
+        android:paddingTop="8dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:textColor="@android:color/holo_blue_dark"
+        android:importantForAccessibility="yes"
+        android:contentDescription="Check-in Date, clickable" />
+
+    <EditText
+        android:id="@+id/editTextCheckInDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Selected Date"
+        android:focusable="false"
+        android:clickable="false"
+        android:importantForAccessibility="yes"
+        android:contentDescription="Selected Check-in Date" />
+
+    <TextView
+        android:id="@+id/textViewPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Total Price: $0"
+        android:textSize="18sp"
+        android:paddingTop="16dp"
+        android:importantForAccessibility="yes"
+        android:contentDescription="Total Price" />
+
+    <Button
+        android:id="@+id/buttonNext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Confirm Booking"
+        android:importantForAccessibility="yes"
+        android:contentDescription="Confirm Booking Button" />
+
+</LinearLayout>
