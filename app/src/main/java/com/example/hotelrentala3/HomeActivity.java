@@ -197,6 +197,7 @@ public class HomeActivity extends AppCompatActivity {
     private void showAvailableRooms(List<Hotel> availableHotels) {
         Intent intent = new Intent(this, SearchResultActivity.class);
         intent.putExtra("availableHotels", (Serializable) availableHotels);
+        intent.putExtra("location", locationInput.getText());
         startActivity(intent);
     }
 

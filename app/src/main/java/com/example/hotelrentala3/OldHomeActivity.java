@@ -9,18 +9,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.Toast;
 import android.R.drawable;
-
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -30,28 +26,31 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class PromotionActivity extends AppCompatActivity {
+
+public class OldHomeActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getSupportActionBar().hide();
+
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_promotion);
+        setContentView(R.layout.activity_old_home);
 
         countPromotions();
         Button promotionsBtn = findViewById(R.id.promotions);
         promotionsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(PromotionActivity.this, NotificationsActivity.class);
+                Intent intent = new Intent(OldHomeActivity.this, NotificationsActivity.class);
                 startActivity(intent);
             }
         });
@@ -65,13 +64,12 @@ public class PromotionActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
-
         Button buttonLogout = findViewById(R.id.buttonLogout);
+        Button buttonChooseHotel = findViewById(R.id.buttonChooseHotel);
+        Button buttonCreateHotel = findViewById(R.id.buttonCreateHotel);
+
+        // Navigate to hotel selection activity when button is clicked
+        buttonChooseHotel.setOnClickListener(v -> navigateToHotelSelection());
 
         buttonLogout.setOnClickListener(v -> {
             FirebaseUser user = mAuth.getCurrentUser();
@@ -95,9 +93,15 @@ public class PromotionActivity extends AppCompatActivity {
         });
     }
 
+    // Navigate to HotelSelectionActivity
+    private void navigateToHotelSelection() {
+        Intent intent = new Intent(OldHomeActivity.this, HotelSelectionActivity.class);
+        startActivity(intent);
+    }
+
     // Navigate to LoginActivity
     private void navigateToLogin() {
-        Intent intent = new Intent(PromotionActivity.this, LoginActivity.class);
+        Intent intent = new Intent(OldHomeActivity.this, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();
@@ -165,6 +169,6 @@ public class PromotionActivity extends AppCompatActivity {
     }
 
     private void showToast(String message) {
-        Toast.makeText(PromotionActivity.this, message, Toast.LENGTH_SHORT).show();
+        Toast.makeText(OldHomeActivity.this, message, Toast.LENGTH_SHORT).show();
     }
 }

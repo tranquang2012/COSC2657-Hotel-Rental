@@ -3,37 +3,70 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="24dp"
+    android:background="@color/backgroundColor"
+    android:gravity="center_horizontal">
+
+    <TextView
+        android:id="@+id/textViewAppTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hotel Rental"
+        android:textSize="24sp"
+        android:textColor="@color/primaryColor"
+        android:fontFamily="sans-serif-medium"
+        android:layout_marginBottom="32dp" />
 
     <EditText
         android:id="@+id/editTextEmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Email"
-        android:inputType="textEmailAddress" />
+        android:inputType="textEmailAddress"
+        android:padding="12dp"
+        android:textSize="16sp"
+        android:layout_marginBottom="16dp" />
 
     <EditText
         android:id="@+id/editTextPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Password"
-        android:inputType="textPassword" />
+        android:inputType="textPassword"
+        android:padding="12dp"
+        android:textSize="16sp"
+        android:layout_marginBottom="24dp" />
 
+    <!-- Login Button -->
     <Button
         android:id="@+id/buttonLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Login" />
+        android:text="Login"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:padding="12dp"
+        android:layout_marginBottom="16dp" />
+
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/buttonSignInWithGoogle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp" />
+
+    <TextView
+        android:id="@+id/textViewRegisterPrompt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Don't have an account?"
+        android:textSize="14sp"
+        android:layout_marginBottom="8dp" />
 
     <Button
         android:id="@+id/buttonGoToRegister"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Don't have an account? Register" />
-
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/buttonSignInWithGoogle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
+        android:text="Register"
+        android:textSize="16sp"
+        android:padding="12dp" />
 </LinearLayout>
