@@ -20,4 +20,8 @@
     <string name="title_activity_maps">MapsActivity</string>
     <dimen name="bottom_sheet_peek_height">100dp</dimen>
     <dimen name="bottom_sheet_expanded_height">500dp</dimen>
+<<<<<<< HEAD
 </resources>
+=======
+</resources>
+>>>>>>> ba3c6feebdc7dfb6c3f8cb00d650f22d7049e041
