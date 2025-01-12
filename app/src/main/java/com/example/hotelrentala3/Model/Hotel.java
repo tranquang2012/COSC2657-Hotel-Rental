@@ -4,13 +4,14 @@ import java.io.Serializable;
 
 public class Hotel implements Serializable {
     private String name;
+    private String location;
     private double latitude;
     private double longitude;
     private int availability;
     private double price;
     private double rating;
 
-    public Hotel(String name, double latitude, double longitude, int availability, double price, double rating) {
+    public Hotel(String name, String location, double latitude, double longitude, int availability, double price, double rating) {
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -21,6 +22,10 @@ public class Hotel implements Serializable {
 
     public String getName() {
         return name;
+    }
+
+    public String getLocation() {
+        return location;
     }
 
     public double getLatitude() {

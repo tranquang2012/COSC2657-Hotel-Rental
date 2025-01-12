@@ -20,7 +20,7 @@
             android:text="Hotel Name"/>
 
         <TextView
-            android:id="@+id/latitude"
+            android:id="@+id/location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="16sp"
@@ -28,20 +28,12 @@
             android:text="Location"/>
 
         <TextView
-            android:id="@+id/longitude"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:layout_marginTop="4dp"
-            android:text="Room Type"/>
-
-        <TextView
             android:id="@+id/availability"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="16sp"
             android:layout_marginTop="4dp"
-            android:text="Availability"/>
+            android:text="Available Rooms"/>
 
         <TextView
             android:id="@+id/price"

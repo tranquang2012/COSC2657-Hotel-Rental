@@ -160,7 +160,7 @@ public class HomeActivity extends AppCompatActivity {
                         // Check if the availability matches the number of persons
                         if (availability >= numberOfPersons) {
                             // Add the room to the list
-                            availableHotels.add(new Hotel(name, latitude, longitude, availability, price, rating));
+                            availableHotels.add(new Hotel(name,location, latitude, longitude, availability, price, rating));
                         }
                     }
 
@@ -196,7 +196,7 @@ public class HomeActivity extends AppCompatActivity {
     // Launches the ResultActivity with the list of available rooms
     private void showAvailableRooms(List<Hotel> availableHotels) {
         Intent intent = new Intent(this, SearchResultActivity.class);
-        intent.putExtra("availableRooms", (Serializable) availableHotels);
+        intent.putExtra("availableHotels", (Serializable) availableHotels);
         startActivity(intent);
     }
 

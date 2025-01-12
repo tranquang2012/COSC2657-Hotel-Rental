@@ -33,9 +33,8 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelViewHol
     public void onBindViewHolder(@NonNull HotelViewHolder holder, int position) {
         Hotel hotel = hotelList.get(position);
         holder.name.setText("Name: " + hotel.getName());
-        holder.latitude.setText("Latitude: " + hotel.getLatitude());
-        holder.longitude.setText("Longitude: " + hotel.getLongitude());
-        holder.availability.setText("Availability: " + hotel.getAvailability());
+        holder.location.setText("Location: " + hotel.getLocation());
+        holder.availability.setText("Rooms Available: " + hotel.getAvailability() + " rooms");
         holder.price.setText("Price: $" + hotel.getPrice());
         holder.rating.setText("Rating: " + hotel.getRating());
     }
@@ -47,13 +46,12 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelViewHol
     }
 
     public static class HotelViewHolder extends RecyclerView.ViewHolder {
-        TextView name, latitude, longitude, availability, price, rating;
+        TextView name, location, availability, price, rating;
 
         public HotelViewHolder(View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.hotel_name);
-            latitude = itemView.findViewById(R.id.latitude);
-            longitude = itemView.findViewById(R.id.longitude);
+            location = itemView.findViewById(R.id.location);
             availability = itemView.findViewById(R.id.availability);
             price = itemView.findViewById(R.id.price);
             rating = itemView.findViewById(R.id.rating);

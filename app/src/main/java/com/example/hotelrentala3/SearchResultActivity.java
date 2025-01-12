@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.hotelrentala3.Adapter.HotelAdapter;
 import com.example.hotelrentala3.Model.Hotel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SearchResultActivity extends AppCompatActivity {
@@ -34,7 +35,7 @@ public class SearchResultActivity extends AppCompatActivity {
         hotelsRecyclerView = findViewById(R.id.rooms_recycler_view);
         hotelsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        List<Hotel> availableHotels = (List<Hotel>) getIntent().getSerializableExtra("availableRooms");
+        List<Hotel> availableHotels = (List<Hotel>) getIntent().getSerializableExtra("availableHotels");
         hotelAdapter = new HotelAdapter(availableHotels);
         hotelsRecyclerView.setAdapter(hotelAdapter);
     }
