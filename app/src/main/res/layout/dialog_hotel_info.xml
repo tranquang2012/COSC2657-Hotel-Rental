@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/hotelName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Hotel Name"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:textColor="#000" />
+
+    <TextView
+        android:id="@+id/hotelPrice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="8dp"
+        android:text="Hotel Price"
+        android:textColor="#000" />
+
+    <TextView
+        android:id="@+id/hotelRating"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="8dp"
+        android:text="Hotel Rating"
+        android:textColor="#000" />
+
+    <TextView
+        android:id="@+id/hotelAvailability"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="8dp"
+        android:text="Hotel Availability"
+        android:textColor="#000" />
+</LinearLayout>
