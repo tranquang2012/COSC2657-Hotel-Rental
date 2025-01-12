@@ -44,7 +44,7 @@
             android:name=".AdminActivity"
             android:exported="false" />
         <activity
-            android:name=".HomeActivity"
+            android:name=".PromotionActivity"
             android:exported="false" />
         <activity
             android:name=".LoginActivity"

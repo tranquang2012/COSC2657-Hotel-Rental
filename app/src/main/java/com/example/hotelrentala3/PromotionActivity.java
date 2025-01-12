@@ -9,7 +9,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.Toast;
 import android.R.drawable;
@@ -36,7 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class HomeActivity extends AppCompatActivity {
+public class PromotionActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
@@ -52,7 +51,7 @@ public class HomeActivity extends AppCompatActivity {
         promotionsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(HomeActivity.this, NotificationsActivity.class);
+                Intent intent = new Intent(PromotionActivity.this, NotificationsActivity.class);
                 startActivity(intent);
             }
         });
@@ -98,7 +97,7 @@ public class HomeActivity extends AppCompatActivity {
 
     // Navigate to LoginActivity
     private void navigateToLogin() {
-        Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
+        Intent intent = new Intent(PromotionActivity.this, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();
@@ -166,6 +165,6 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void showToast(String message) {
-        Toast.makeText(HomeActivity.this, message, Toast.LENGTH_SHORT).show();
+        Toast.makeText(PromotionActivity.this, message, Toast.LENGTH_SHORT).show();
     }
 }
