@@ -2,8 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -14,10 +17,33 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.HotelRentalA3"
-        >
+        tools:targetApi="31">
+
+        <!-- Google Maps API Key -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDfRT6BY1MIRDdyTIHoPiEBuBkTJrMpZ9Q" />
+
+        <!-- Activities -->
+        <activity
+            android:name=".MapsActivity"
+            android:exported="true"
+            android:label="@string/title_activity_maps" />
         <activity
             android:name=".NotificationsActivity"
-            android:exported="false" />
+            android:exported="true" />
+        <activity
+            android:name=".AdminActivity"
+            android:exported="true" />
+        <activity
+            android:name=".SearchResultActivity"
+            android:exported="true" />
+        <activity
+            android:name=".HomeActivity"
+            android:exported="true" />
+        <activity
+            android:name=".PromotionActivity"
+            android:exported="true" />
         <activity
             android:name=".RoomSelectionActivity"
             android:exported="false" />
@@ -38,13 +64,12 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".RegisterActivity"
-            android:exported="false" />
+            android:exported="true" />
     </application>
 
 </manifest>
