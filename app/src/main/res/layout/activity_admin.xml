@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context=".AdminActivity">
+
+    <Button
+        android:id="@+id/addPromotionBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="add promotion" />
+
+    <Button
+        android:id="@+id/addCouponBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="create coupon codes" />
+
+    <Button
+        android:id="@+id/addHotelBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="add hotel" />
+
+    <Button
+        android:id="@+id/buttonLogout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Logout"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="159dp"
+        tools:layout_editor_absoluteY="459dp" />
+</LinearLayout>
