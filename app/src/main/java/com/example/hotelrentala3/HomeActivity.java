@@ -14,10 +14,7 @@ import android.widget.Button;
 import android.widget.Toast;
 import android.R.drawable;
 
-<<<<<<< Updated upstream
 import androidx.activity.EdgeToEdge;
-=======
->>>>>>> Stashed changes
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
@@ -39,11 +36,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-<<<<<<< Updated upstream
-=======
-
-
->>>>>>> Stashed changes
 public class HomeActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
