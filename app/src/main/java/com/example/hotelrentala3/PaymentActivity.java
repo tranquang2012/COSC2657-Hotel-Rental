@@ -177,7 +177,7 @@ public class PaymentActivity extends AppCompatActivity {
                         updateHotelAvailability();
 
                         // go back to home after successful payment
-                        Intent intent = new Intent(PaymentActivity.this, HomeActivity.class);
+                        Intent intent = new Intent(PaymentActivity.this, OldHomeActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
                         finish();

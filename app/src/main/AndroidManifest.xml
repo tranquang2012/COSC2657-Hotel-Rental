@@ -34,7 +34,7 @@
             android:name=".PaymentActivity"
             android:exported="false" />
         <activity
-            android:name=".HomeActivity"
+            android:name=".OldHomeActivity"
             android:exported="false" />
         <activity
             android:name=".LoginActivity"

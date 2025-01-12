@@ -17,9 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.Timestamp;
@@ -31,29 +29,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.content.Context;
-import android.content.pm.PackageManager;
-import android.os.Build;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 
-public class HomeActivity extends AppCompatActivity {
+public class OldHomeActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
@@ -65,14 +43,14 @@ public class HomeActivity extends AppCompatActivity {
         getSupportActionBar().hide();
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+        setContentView(R.layout.activity_old_home);
 
         countPromotions();
         Button promotionsBtn = findViewById(R.id.promotions);
         promotionsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(HomeActivity.this, NotificationsActivity.class);
+                Intent intent = new Intent(OldHomeActivity.this, NotificationsActivity.class);
                 startActivity(intent);
             }
         });
@@ -117,13 +95,13 @@ public class HomeActivity extends AppCompatActivity {
 
     // Navigate to HotelSelectionActivity
     private void navigateToHotelSelection() {
-        Intent intent = new Intent(HomeActivity.this, HotelSelectionActivity.class);
+        Intent intent = new Intent(OldHomeActivity.this, HotelSelectionActivity.class);
         startActivity(intent);
     }
 
     // Navigate to LoginActivity
     private void navigateToLogin() {
-        Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
+        Intent intent = new Intent(OldHomeActivity.this, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();
@@ -191,6 +169,6 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void showToast(String message) {
-        Toast.makeText(HomeActivity.this, message, Toast.LENGTH_SHORT).show();
+        Toast.makeText(OldHomeActivity.this, message, Toast.LENGTH_SHORT).show();
     }
 }
