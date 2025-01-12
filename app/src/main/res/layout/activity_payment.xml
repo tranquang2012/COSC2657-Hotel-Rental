@@ -2,20 +2,23 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:padding="24dp"
+    android:background="@color/backgroundColor">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/enter_card_details"
-            android:textSize="16sp"
+            android:textSize="20sp"
             android:textStyle="bold"
-            android:paddingBottom="8dp" />
+            android:paddingBottom="16dp"
+            android:gravity="center"/>
 
         <Spinner
             android:id="@+id/spinnerCardType"
@@ -23,7 +26,8 @@
             android:layout_height="wrap_content"
             android:spinnerMode="dropdown"
             android:entries="@array/card_type_array"
-            android:layout_marginBottom="12dp" />
+            android:layout_marginBottom="16dp"
+            />
 
         <EditText
             android:id="@+id/editTextCardNumber"
@@ -31,9 +35,10 @@
             android:layout_height="48dp"
             android:hint="@string/card_number"
             android:inputType="number"
-            android:background="?attr/editTextBackground"
+            android:textSize="16sp"
             android:padding="12dp"
-            android:textSize="16sp" />
+            android:layout_marginBottom="16dp"
+            />
 
         <EditText
             android:id="@+id/editTextCardValidFrom"
@@ -41,9 +46,10 @@
             android:layout_height="48dp"
             android:hint="@string/valid_from_mm_yy"
             android:inputType="text"
-            android:background="?attr/editTextBackground"
+            android:textSize="16sp"
             android:padding="12dp"
-            android:textSize="16sp" />
+            android:layout_marginBottom="16dp"
+            />
 
         <EditText
             android:id="@+id/editTextCardExpiry"
@@ -51,9 +57,10 @@
             android:layout_height="48dp"
             android:hint="@string/expiration_date_mm_yy"
             android:inputType="text"
-            android:background="?attr/editTextBackground"
+            android:textSize="16sp"
             android:padding="12dp"
-            android:textSize="16sp" />
+            android:layout_marginBottom="16dp"
+            />
 
         <EditText
             android:id="@+id/editTextCVC"
@@ -61,15 +68,19 @@
             android:layout_height="48dp"
             android:hint="@string/cvc"
             android:inputType="numberPassword"
-            android:background="?attr/editTextBackground"
+            android:textSize="16sp"
             android:padding="12dp"
-            android:textSize="16sp" />
+            android:layout_marginBottom="24dp" />
 
         <Button
             android:id="@+id/buttonMakePayment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/make_payment"
-            android:layout_marginTop="16dp" />
+            android:textSize="16sp"
+            android:textColor="@color/white"
+            android:padding="12dp"
+            android:layout_marginTop="24dp"/>
+
     </LinearLayout>
 </ScrollView>

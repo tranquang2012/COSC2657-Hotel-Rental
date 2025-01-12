@@ -3,13 +3,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:spacing="12dp">
 
     <Spinner
         android:id="@+id/spinnerRoomType"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:entries="@array/room_type_options" />
+        android:entries="@array/room_type_options"
+        android:importantForAccessibility="yes"
+        android:contentDescription="Room Type" />
 
     <EditText
         android:id="@+id/editTextNumberOfNights"
@@ -18,7 +21,7 @@
         android:hint="Number of Nights"
         android:inputType="number"
         android:importantForAccessibility="yes"
-        android:contentDescription="Number of nights" />
+        android:contentDescription="Number of Nights" />
 
     <TextView
         android:id="@+id/textViewCheckInDate"
@@ -31,7 +34,8 @@
         android:focusable="true"
         android:textColor="@android:color/holo_blue_dark"
         android:importantForAccessibility="yes"
-        android:contentDescription="Check-in Date, clickable" />
+        android:contentDescription="Check-in Date, clickable"
+        android:onClick="showDatePickerDialog"/>
 
     <EditText
         android:id="@+id/editTextCheckInDate"
@@ -59,6 +63,7 @@
         android:layout_height="wrap_content"
         android:text="Confirm Booking"
         android:importantForAccessibility="yes"
-        android:contentDescription="Confirm Booking Button" />
+        android:contentDescription="Confirm Booking Button"
+        android:layout_marginTop="24dp"/>
 
 </LinearLayout>

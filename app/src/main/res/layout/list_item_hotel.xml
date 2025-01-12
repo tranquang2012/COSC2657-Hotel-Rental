@@ -3,7 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="10dp">
+    android:padding="16dp"
+    android:layout_marginBottom="8dp"
+    android:elevation="4dp">
 
     <TextView
         android:id="@+id/textViewHotelName"
@@ -28,5 +30,5 @@
         android:layout_height="wrap_content"
         android:text="Rating: 0.0★"
         android:textSize="14sp"
-        android:textColor="#808080" />
+        />
 </LinearLayout>
