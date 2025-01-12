@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginHorizontal="10dp"
+        android:hint="title"/>
+
+    <EditText
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginHorizontal="10dp"
+        android:hint="content"/>
+
+    <EditText
+        android:id="@+id/promotionStartDate"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginHorizontal="10dp"
+        android:hint="FROM YYYY-MM-DD"/>
+
+    <EditText
+        android:id="@+id/promotionEndDate"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginHorizontal="10dp"
+        android:hint="UNTIL YYYY-MM-DD"/>
+
+</LinearLayout>
