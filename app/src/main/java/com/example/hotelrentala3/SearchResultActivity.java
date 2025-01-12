@@ -10,15 +10,15 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.hotelrentala3.Adapter.RoomAdapter;
-import com.example.hotelrentala3.Model.Room;
+import com.example.hotelrentala3.Adapter.HotelAdapter;
+import com.example.hotelrentala3.Model.Hotel;
 
 import java.util.List;
 
 public class SearchResultActivity extends AppCompatActivity {
 
-    private RecyclerView roomsRecyclerView;
-    private RoomAdapter roomAdapter;
+    private RecyclerView hotelsRecyclerView;
+    private HotelAdapter hotelAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,11 +31,11 @@ public class SearchResultActivity extends AppCompatActivity {
             return insets;
         });
 
-        roomsRecyclerView = findViewById(R.id.rooms_recycler_view);
-        roomsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        hotelsRecyclerView = findViewById(R.id.rooms_recycler_view);
+        hotelsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        List<Room> availableRooms = (List<Room>) getIntent().getSerializableExtra("availableRooms");
-        roomAdapter = new RoomAdapter(availableRooms);
-        roomsRecyclerView.setAdapter(roomAdapter);
+        List<Hotel> availableHotels = (List<Hotel>) getIntent().getSerializableExtra("availableRooms");
+        hotelAdapter = new HotelAdapter(availableHotels);
+        hotelsRecyclerView.setAdapter(hotelAdapter);
     }
 }

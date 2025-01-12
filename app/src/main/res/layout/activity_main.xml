@@ -43,7 +43,7 @@
                     android:contentDescription="Location Icon" />
 
                 <EditText
-                    android:id="@+id/destination_input"
+                    android:id="@+id/location"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:layout_marginStart="8dp"
@@ -146,34 +146,14 @@
                 android:layout_marginTop="12dp">
 
                 <TextView
+                    android:id="@+id/tv_room_guest_info"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Rooms &amp; Guests"
-                    android:textSize="14sp"
-                    android:layout_marginBottom="4dp"
-                    android:textColor="#757575" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:text="1 Adults, 0 Children, 1 Room"
+                    android:padding="12dp"
                     android:background="@drawable/rounded_background"
-                    android:padding="12dp">
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_guests"
-                        android:contentDescription="Guests Icon" />
-
-                    <TextView
-                        android:id="@+id/room_guest_info"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:text="2 rooms, 2 adults, 1 child"
-                        android:textSize="16sp" />
-                </LinearLayout>
+                    android:textSize="16sp"
+                    android:layout_marginTop="16dp" />
             </LinearLayout>
 
             <!-- Search Button -->

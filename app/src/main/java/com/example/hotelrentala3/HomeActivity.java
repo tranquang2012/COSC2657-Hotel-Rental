@@ -1,8 +1,11 @@
 package com.example.hotelrentala3;
 
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -12,7 +15,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.hotelrentala3.Model.Room;
+import com.example.hotelrentala3.Model.Hotel;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -26,7 +29,11 @@ import java.util.Map;
 public class HomeActivity extends AppCompatActivity {
 
     private FirebaseFirestore db;
-    private TextView checkInDate, checkOutDate, searchButton;
+    private TextView checkInDate;
+    private TextView checkOutDate;
+    private TextView tvRoomGuestInfo;
+    private EditText locationInput;
+    private int numberOfPersons = 1, numberOfRooms = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,21 +48,25 @@ public class HomeActivity extends AppCompatActivity {
 
         // Initialize Firestore and views
         db = FirebaseFirestore.getInstance();
+        locationInput = findViewById(R.id.location);
         checkInDate = findViewById(R.id.checkin_date);
         checkOutDate = findViewById(R.id.checkout_date);
-        searchButton = findViewById(R.id.search_button);
+        TextView searchButton = findViewById(R.id.search_button);
+        tvRoomGuestInfo = findViewById(R.id.tv_room_guest_info);
 
         // Set onClickListeners
         checkInDate.setOnClickListener(view -> openDatePicker("checkin"));
         checkOutDate.setOnClickListener(view -> openDatePicker("checkout"));
+        tvRoomGuestInfo.setOnClickListener(view -> openRoomGuestDialog());
         searchButton.setOnClickListener(view -> {
+            String location = locationInput.getText().toString();
             String selectedCheckIn = checkInDate.getText().toString();
             String selectedCheckOut = checkOutDate.getText().toString();
 
-            if (selectedCheckIn.equals("Select a date") || selectedCheckOut.equals("Select a date")) {
-                Toast.makeText(this, "Please select both check-in and check-out dates", Toast.LENGTH_SHORT).show();
+            if (location.isEmpty() || selectedCheckIn.equals("Select a date") || selectedCheckOut.equals("Select a date")) {
+                Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
             } else {
-                searchAvailableRooms(selectedCheckIn, selectedCheckOut);
+                searchAvailableRooms(location, selectedCheckIn, selectedCheckOut);
             }
         });
     }
@@ -80,36 +91,83 @@ public class HomeActivity extends AppCompatActivity {
         datePickerDialog.show();
     }
 
-    // Searches available rooms based on the selected dates
-    private void searchAvailableRooms(String selectedCheckIn, String selectedCheckOut) {
+    private void openRoomGuestDialog() {
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.room_guest_dialog);
+
+        // Get dialog views
+        TextView tvPersonsCount = dialog.findViewById(R.id.tv_persons_count);
+        TextView tvRoomsCount = dialog.findViewById(R.id.tv_rooms_count);
+        Button btnDone = dialog.findViewById(R.id.btn_done);
+
+        // Increment and decrement buttons for persons
+        dialog.findViewById(R.id.btn_increment_persons).setOnClickListener(view -> {
+            int count = Integer.parseInt(tvPersonsCount.getText().toString());
+            tvPersonsCount.setText(String.valueOf(++count));
+        });
+
+        dialog.findViewById(R.id.btn_decrement_persons).setOnClickListener(view -> {
+            int count = Integer.parseInt(tvPersonsCount.getText().toString());
+            if (count > 1) {
+                tvPersonsCount.setText(String.valueOf(--count));
+            }
+        });
+
+        // Increment and decrement buttons for rooms
+        dialog.findViewById(R.id.btn_increment_rooms).setOnClickListener(view -> {
+            int count = Integer.parseInt(tvRoomsCount.getText().toString());
+            tvRoomsCount.setText(String.valueOf(++count));
+        });
+
+        dialog.findViewById(R.id.btn_decrement_rooms).setOnClickListener(view -> {
+            int count = Integer.parseInt(tvRoomsCount.getText().toString());
+            if (count > 1) {
+                tvRoomsCount.setText(String.valueOf(--count));
+            }
+        });
+
+        // Done button action
+        btnDone.setOnClickListener(view -> {
+            String roomGuestInfo = tvPersonsCount.getText() + " Adults, "
+                    + tvRoomsCount.getText() + " Rooms";
+            tvRoomGuestInfo.setText(roomGuestInfo);
+            dialog.dismiss();
+            numberOfPersons = Integer.parseInt(tvPersonsCount.getText().toString());
+            numberOfRooms = Integer.parseInt(tvRoomsCount.getText().toString());
+
+            Toast.makeText(this, "Room and Guest info saved", Toast.LENGTH_SHORT).show();
+        });
+
+        dialog.show();
+    }
+
+    // Searches available rooms based on the location, selected dates, number of guests
+    private void searchAvailableRooms(String location, String selectedCheckIn, String selectedCheckOut) {
         db.collection("hotels")
+                .whereEqualTo("location", location)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    List<Room> availableRooms = new ArrayList<>();
+                    List<Hotel> availableHotels = new ArrayList<>();
 
                     for (DocumentSnapshot hotelSnapshot : queryDocumentSnapshots.getDocuments()) {
-                        String hotelName = hotelSnapshot.getString("name");
-                        String location = hotelSnapshot.getString("location");
+                        String name = hotelSnapshot.getString("name");
+                        double latitude = hotelSnapshot.getDouble("latitude");
+                        double longitude = hotelSnapshot.getDouble("longitude");
+                        int availability = hotelSnapshot.getLong("availability").intValue();
+                        double price = hotelSnapshot.getDouble("price");
+                        double rating = hotelSnapshot.getDouble("rating");
 
-                        Map<String, Map<String, Object>> rooms = (Map<String, Map<String, Object>>) hotelSnapshot.get("rooms");
-                        for (Map.Entry<String, Map<String, Object>> roomEntry : rooms.entrySet()) {
-                            Map<String, Object> roomDetails = roomEntry.getValue();
-
-                            String roomType = (String) roomDetails.get("type");
-                            String capacity = (String) roomDetails.get("capacity");
-                            long price = (long) roomDetails.get("price");
-                            List<Map<String, String>> bookings = (List<Map<String, String>>) roomDetails.get("bookings");
-
-                            if (isRoomAvailable(selectedCheckIn, selectedCheckOut, bookings)) {
-                                availableRooms.add(new Room(hotelName, location, roomType, capacity, price));
-                            }
+                        // Check if the availability matches the number of persons
+                        if (availability >= numberOfPersons) {
+                            // Add the room to the list
+                            availableHotels.add(new Hotel(name, latitude, longitude, availability, price, rating));
                         }
                     }
 
-                    if (availableRooms.isEmpty()) {
-                        Toast.makeText(this, "No rooms available for the selected dates", Toast.LENGTH_SHORT).show();
+                    if (availableHotels.isEmpty()) {
+                        Toast.makeText(this, "No rooms available for the selected criteria", Toast.LENGTH_SHORT).show();
                     } else {
-                        showAvailableRooms(availableRooms);
+                        showAvailableRooms(availableHotels);
                     }
                 })
                 .addOnFailureListener(e -> {
@@ -136,9 +194,9 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     // Launches the ResultActivity with the list of available rooms
-    private void showAvailableRooms(List<Room> availableRooms) {
+    private void showAvailableRooms(List<Hotel> availableHotels) {
         Intent intent = new Intent(this, SearchResultActivity.class);
-        intent.putExtra("availableRooms", (Serializable) availableRooms);
+        intent.putExtra("availableRooms", (Serializable) availableHotels);
         startActivity(intent);
     }
 
