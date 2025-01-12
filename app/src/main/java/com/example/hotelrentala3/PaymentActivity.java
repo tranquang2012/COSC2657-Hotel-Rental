@@ -1,14 +1,17 @@
 package com.example.hotelrentala3;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,13 +29,16 @@ public class PaymentActivity extends AppCompatActivity {
     private Button buttonPay;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
-
     private String selectedHotelId;
     private double totalPrice;
     private String selectedCardType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getSupportActionBar().hide();
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment);
 
@@ -101,8 +107,7 @@ public class PaymentActivity extends AppCompatActivity {
                         Double balance = cardDocument.getDouble("balance");
 
                         if (balance != null && balance >= totalPrice) {
-                            // if enough money, proceed with the payment process
-                            updateCardBalance(cardDocument.getId(), balance - totalPrice);
+                            showConfirmationDialog(cardDocument, balance);
                         } else {
                             showToast("Insufficient balance.");
                         }
@@ -111,6 +116,30 @@ public class PaymentActivity extends AppCompatActivity {
                     }
                 })
                 .addOnFailureListener(e -> showToast("Error fetching credit card data: " + e.getMessage()));
+    }
+
+    private void showConfirmationDialog(DocumentSnapshot cardDocument, Double balance) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Confirm Payment");
+
+        String confirmationMessage =
+                "Card Type: " + selectedCardType + "\n" +
+                "Amount: $" + totalPrice + "\n" +
+                "Card Number: " + editTextCardNumber.getText().toString() + "\n\n" +
+                "Do you want to confirm the payment?";
+
+        builder.setMessage(confirmationMessage);
+
+        builder.setPositiveButton("Confirm", (dialog, which) -> {
+            updateCardBalance(cardDocument.getId(), balance - totalPrice);
+            dialog.dismiss();
+        });
+
+        builder.setNegativeButton("Cancel", (dialog, which) -> {
+            dialog.dismiss();
+        });
+
+        builder.show();
     }
 
     private void updateCardBalance(String cardDocumentId, double newCardBalance) {
@@ -146,6 +175,12 @@ public class PaymentActivity extends AppCompatActivity {
                     .addOnSuccessListener(aVoid -> {
                         showToast("Payment successful!");
                         updateHotelAvailability();
+
+                        // go back to home after successful payment
+                        Intent intent = new Intent(PaymentActivity.this, HomeActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                        finish();
                     })
                     .addOnFailureListener(e -> showToast("Error recording transaction: " + e.getMessage()));
         }).addOnFailureListener(e -> showToast("Error fetching user details: " + e.getMessage()));

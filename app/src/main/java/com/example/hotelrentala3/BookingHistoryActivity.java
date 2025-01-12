@@ -1,6 +1,7 @@
 package com.example.hotelrentala3;
 
 import android.os.Bundle;
+import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -22,6 +23,10 @@ public class BookingHistoryActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getSupportActionBar().hide();
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_booking_history);
 

@@ -2,6 +2,7 @@ package com.example.hotelrentala3;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Window;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -22,6 +23,10 @@ public class HotelSelectionActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getSupportActionBar().hide();
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hotel_selection);
 
