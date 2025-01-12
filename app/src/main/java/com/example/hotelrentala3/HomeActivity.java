@@ -143,7 +143,7 @@ public class HomeActivity extends AppCompatActivity {
 
     // Searches available rooms based on the location, selected dates, number of guests
     private void searchAvailableRooms(String location, String selectedCheckIn, String selectedCheckOut) {
-        db.collection("hotels")
+        db.collection("TestHotel")
                 .whereEqualTo("location", location)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
