@@ -1,6 +1,8 @@
 package com.example.hotelrentala3;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,14 +13,19 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -26,11 +33,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.UUID;
 
 public class AdminActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
+    private Uri imageUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -189,7 +198,16 @@ public class AdminActivity extends AppCompatActivity {
         EditText availabilityEditText = dialogView.findViewById(R.id.hotelAvailability);
         EditText latitudeEditText = dialogView.findViewById(R.id.hotelLatitude);
         EditText longitudeEditText = dialogView.findViewById(R.id.hotelLongitude);
+        Button selectImageBtn = dialogView.findViewById(R.id.selectImageBtn);
 
+        selectImageBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_PICK);
+                intent.setType("image/*");
+                startActivityForResult(intent, 1001);
+            }
+        });
 
         builder.setPositiveButton("Add", (dialog, which) -> {
             String name = nameEditText.getText().toString();
@@ -206,7 +224,16 @@ public class AdminActivity extends AppCompatActivity {
                     int intAvailability = Integer.parseInt(availability);
                     double doubleLatitude = Double.parseDouble(latitude);
                     double doubleLongitude = Double.parseDouble(longitude);
-                    addHotel(name, description, intPrice, intAvailability, doubleLatitude, doubleLongitude);
+                    if(imageUri != null) {
+                        uploadImage(imageUri, imageUrl -> {
+                            addHotel(name, description, intPrice, intAvailability, doubleLatitude, doubleLongitude);
+                        });
+                    } else {
+                        Uri defaultImage = Uri.parse("android.resource://" + getPackageName() + "/" + R.drawable.defaultimage);
+                        uploadImage(imageUri, imageUrl -> {
+                            addHotel(name, description, intPrice, intAvailability, doubleLatitude, doubleLongitude);
+                        });
+                    }
                 } catch(NumberFormatException e) {
                     showToast("Price must be a valid number");
                 }
@@ -221,6 +248,48 @@ public class AdminActivity extends AppCompatActivity {
 
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 1) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Intent intent = new Intent(Intent.ACTION_PICK);
+                intent.setType("image/*");
+                startActivityForResult(intent, 1001);
+            } else {
+                Log.d("permissionDenied", "aaa");
+                showToast("Permission denied to read your External storage");
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 1001 && resultCode == RESULT_OK && data != null) {
+            imageUri = data.getData();
+        } else {
+            showToast("failed.");
+        }
+    }
+
+    private void uploadImage(Uri uri, OnSuccessListener<String> onSuccessListener) {
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference("hotel_images/" + UUID.randomUUID().toString());
+        storageReference.putFile(uri)
+                .continueWithTask(task -> {
+                    if (!task.isSuccessful()) {
+                        throw task.getException();
+                    }
+                    return storageReference.getDownloadUrl();
+                })
+                .addOnSuccessListener(uri2 -> {
+                    onSuccessListener.onSuccess(uri2.toString());
+                })
+                .addOnFailureListener(e -> {
+                    showToast("Failed to upload image.");
+                });
     }
 
     private void addHotel(String name, String description, int price, int availability, double latitude, double longitude) {
