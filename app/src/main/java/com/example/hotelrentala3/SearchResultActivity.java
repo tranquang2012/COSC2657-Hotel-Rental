@@ -1,6 +1,8 @@
 package com.example.hotelrentala3;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.LinearLayout;
 import android.widget.SearchView;
 
 import androidx.activity.EdgeToEdge;
@@ -25,6 +27,7 @@ public class SearchResultActivity extends AppCompatActivity {
     private SearchView svHotelSearch;
     private List<Hotel> hotelList;
     private List<Hotel> filteredList;
+    private String location;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +41,7 @@ public class SearchResultActivity extends AppCompatActivity {
         });
 
         hotelsRecyclerView = findViewById(R.id.rooms_recycler_view);
+        LinearLayout btnOpenMap = findViewById(R.id.btn_open_map);
         hotelsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         hotelList = (List<Hotel>) getIntent().getSerializableExtra("availableHotels");
@@ -45,12 +49,21 @@ public class SearchResultActivity extends AppCompatActivity {
             hotelList = new ArrayList<>();
         }
 
+        location = getIntent().getStringExtra("location");
+
         filteredList = new ArrayList<>(hotelList);
 
         hotelAdapter = new HotelAdapter(filteredList);
         hotelsRecyclerView.setAdapter(hotelAdapter);
 
         setupSearch();
+
+        // Map Button Click Listener
+        btnOpenMap.setOnClickListener(view -> {
+            Intent intent = new Intent(SearchResultActivity.this, MapsActivity.class);
+            intent.putExtra("location", location); // pass location to map
+            startActivity(intent);
+        });
     }
 
     private void setupSearch() {

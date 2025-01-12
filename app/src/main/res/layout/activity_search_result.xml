@@ -8,7 +8,6 @@
     tools:context=".SearchResultActivity">
 
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -20,6 +19,33 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:queryHint="Search by hotel name" />
+
+        <!-- Map Button with Icon -->
+        <LinearLayout
+            android:id="@+id/btn_open_map"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:padding="12dp"
+            android:background="@drawable/rounded_button_background"
+            android:layout_marginTop="8dp">
+
+            <ImageView
+                android:id="@+id/iv_map_icon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_map" /> <!-- Add your map icon drawable -->
+
+            <TextView
+                android:id="@+id/tv_view_map"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="View on Map"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:layout_marginStart="8dp" />
+        </LinearLayout>
 
         <!-- RecyclerView -->
         <androidx.recyclerview.widget.RecyclerView
