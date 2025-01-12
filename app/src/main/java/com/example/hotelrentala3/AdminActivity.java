@@ -186,15 +186,27 @@ public class AdminActivity extends AppCompatActivity {
         EditText nameEditText = dialogView.findViewById(R.id.hotelName);
         EditText descriptionEditText = dialogView.findViewById(R.id.hotelDescription);
         EditText priceEditText = dialogView.findViewById(R.id.hotelPrice);
+        EditText availabilityEditText = dialogView.findViewById(R.id.hotelAvailability);
+        EditText latitudeEditText = dialogView.findViewById(R.id.hotelLatitude);
+        EditText longitudeEditText = dialogView.findViewById(R.id.hotelLongitude);
+
 
         builder.setPositiveButton("Add", (dialog, which) -> {
             String name = nameEditText.getText().toString();
             String description = descriptionEditText.getText().toString();
             String price = priceEditText.getText().toString();
-            if(!name.isEmpty() && !description.isEmpty() && !price.isEmpty()) {
+            String availability = availabilityEditText.getText().toString();
+            String latitude = latitudeEditText.getText().toString();
+            String longitude = longitudeEditText.getText().toString();
+
+
+            if(!name.isEmpty() && !description.isEmpty() && !price.isEmpty() && !availability.isEmpty()) {
                 try {
                     int intPrice = Integer.parseInt(price);
-                    addHotel(name, description, intPrice);
+                    int intAvailability = Integer.parseInt(availability);
+                    double doubleLatitude = Double.parseDouble(latitude);
+                    double doubleLongitude = Double.parseDouble(longitude);
+                    addHotel(name, description, intPrice, intAvailability, doubleLatitude, doubleLongitude);
                 } catch(NumberFormatException e) {
                     showToast("Price must be a valid number");
                 }
@@ -211,13 +223,17 @@ public class AdminActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    private void addHotel(String name, String description, int price) {
+    private void addHotel(String name, String description, int price, int availability, double latitude, double longitude) {
         Map<String, Object> hotel = new HashMap<>();
-        hotel.put("hotelName", name);
-        hotel.put("hotelDescription", description);
-        hotel.put("hotelPrice", price);
+        hotel.put("availability", availability);
+        hotel.put("name", name);
+        hotel.put("description", description);
+        hotel.put("latitude", latitude);
+        hotel.put("longitude", longitude);
+        hotel.put("price", price);
+        hotel.put("rating", 0);
 
-        db.collection("Hotels").add(hotel).addOnSuccessListener(documentReference -> {
+        db.collection("TestHotel").add(hotel).addOnSuccessListener(documentReference -> {
             showToast("Hotel added successfully.");
         }).addOnFailureListener(e -> {
             showToast("Failed to add hotel.");
