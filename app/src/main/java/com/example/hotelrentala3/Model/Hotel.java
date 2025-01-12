@@ -13,6 +13,7 @@ public class Hotel implements Serializable {
 
     public Hotel(String name, String location, double latitude, double longitude, int availability, double price, double rating) {
         this.name = name;
+        this.location = location;
         this.latitude = latitude;
         this.longitude = longitude;
         this.availability = availability;

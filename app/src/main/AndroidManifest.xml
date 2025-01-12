@@ -50,6 +50,15 @@
             android:name=".HomeActivity"
             android:exported="true"/>      
         <activity
+            android:name=".SearchResultActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".HomeActivity"
+            android:exported="true"/>      
+        <activity
             android:name=".PromotionActivity"
             android:exported="true" />
         <activity
