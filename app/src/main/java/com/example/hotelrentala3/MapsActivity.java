@@ -46,6 +46,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private TextView hotelDetailsTextView;
     private ImageButton btnGetDirections, buttonGoogleMaps;
     private LatLng selectedHotelLocation;
+    private String regionName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +81,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
 
         EditText searchBar = findViewById(R.id.searchBar);
+        regionName = getIntent().getStringExtra("location");
         searchBar.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -119,8 +121,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
-        LatLng defaultLocation = new LatLng(-33.8688, 151.2093);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 12));
+        fetchRegionCoordinates(regionName);
 
         fetchHotelData();
 
@@ -135,6 +136,49 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
+    private void fetchRegionCoordinates(String regionName) {
+        new Thread(() -> {
+            try {
+                // Use the Geocoding API to fetch the coordinates of the region
+                String apiKey = getString(R.string.google_maps_key);
+                String apiUrl = "https://maps.googleapis.com/maps/api/geocode/json?address=" + regionName + "&key=" + apiKey;
+
+                java.net.URL url = new java.net.URL(apiUrl);
+                java.net.HttpURLConnection connection = (java.net.HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
+                connection.connect();
+
+                int responseCode = connection.getResponseCode();
+                if (responseCode == 200) {
+                    java.io.InputStream inputStream = connection.getInputStream();
+                    java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.InputStreamReader(inputStream));
+                    StringBuilder result = new StringBuilder();
+                    String line;
+
+                    while ((line = reader.readLine()) != null) {
+                        result.append(line);
+                    }
+
+                    reader.close();
+                    connection.disconnect();
+
+                    // Parse the JSON response
+                    org.json.JSONObject jsonResponse = new org.json.JSONObject(result.toString());
+                    org.json.JSONArray results = jsonResponse.getJSONArray("results");
+                    if (results.length() > 0) {
+                        org.json.JSONObject location = results.getJSONObject(0).getJSONObject("geometry").getJSONObject("location");
+                        double latitude = location.getDouble("lat");
+                        double longitude = location.getDouble("lng");
+
+                        // Move the map camera to the region's coordinates
+                        runOnUiThread(() -> mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 12)));
+                    }
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "Error fetching region coordinates: ", e);
+            }
+        }).start();
+    }
     private void fetchHotelData() {
         db.collection("TestHotel")
                 .get()
