@@ -198,16 +198,7 @@ public class AdminActivity extends AppCompatActivity {
         EditText availabilityEditText = dialogView.findViewById(R.id.hotelAvailability);
         EditText latitudeEditText = dialogView.findViewById(R.id.hotelLatitude);
         EditText longitudeEditText = dialogView.findViewById(R.id.hotelLongitude);
-//        Button selectImageBtn = dialogView.findViewById(R.id.selectImageBtn);
 
-//        selectImageBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(Intent.ACTION_PICK);
-//                intent.setType("image/*");
-//                startActivityForResult(intent, 1001);
-//            }
-//        });
 
         builder.setPositiveButton("Add", (dialog, which) -> {
             String name = nameEditText.getText().toString();
@@ -225,16 +216,6 @@ public class AdminActivity extends AppCompatActivity {
                     double doubleLatitude = Double.parseDouble(latitude);
                     double doubleLongitude = Double.parseDouble(longitude);
                     addHotel(name, description, intPrice, intAvailability, doubleLatitude, doubleLongitude);
-//                    if(imageUri != null) {
-//                        uploadImage(imageUri, imageUrl -> {
-//                            addHotel(name, description, intPrice, intAvailability, doubleLatitude, doubleLongitude);
-//                        });
-//                    } else {
-//                        Uri defaultImage = Uri.parse("android.resource://" + getPackageName() + "/" + R.drawable.defaultimage);
-//                        uploadImage(imageUri, imageUrl -> {
-//                            addHotel(name, description, intPrice, intAvailability, doubleLatitude, doubleLongitude);
-//                        });
-//                    }
                 } catch(NumberFormatException e) {
                     showToast("Price must be a valid number");
                 }
@@ -251,47 +232,6 @@ public class AdminActivity extends AppCompatActivity {
         dialog.show();
     }
 
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//        if (requestCode == 1) {
-//            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                Intent intent = new Intent(Intent.ACTION_PICK);
-//                intent.setType("image/*");
-//                startActivityForResult(intent, 1001);
-//            } else {
-//                Log.d("permissionDenied", "aaa");
-//                showToast("Permission denied to read your External storage");
-//            }
-//        }
-//    }
-
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if(requestCode == 1001 && resultCode == RESULT_OK && data != null) {
-//            imageUri = data.getData();
-//        } else {
-//            showToast("failed.");
-//        }
-//    }
-
-//    private void uploadImage(Uri uri, OnSuccessListener<String> onSuccessListener) {
-//        StorageReference storageReference = FirebaseStorage.getInstance().getReference("hotel_images/" + UUID.randomUUID().toString());
-//        storageReference.putFile(uri)
-//                .continueWithTask(task -> {
-//                    if (!task.isSuccessful()) {
-//                        throw task.getException();
-//                    }
-//                    return storageReference.getDownloadUrl();
-//                })
-//                .addOnSuccessListener(uri2 -> {
-//                    onSuccessListener.onSuccess(uri2.toString());
-//                })
-//                .addOnFailureListener(e -> {
-//                    showToast("Failed to upload image.");
-//                });
-//    }
 
     private void addHotel(String name, String description, int price, int availability, double latitude, double longitude) {
         Map<String, Object> hotel = new HashMap<>();
@@ -309,7 +249,6 @@ public class AdminActivity extends AppCompatActivity {
             showToast("Failed to add hotel.");
         });
     }
-
     private void showCouponWindow() {
         LayoutInflater inflater = LayoutInflater.from(this);
         View dialogView = inflater.inflate(R.layout.popup_coupon, null);

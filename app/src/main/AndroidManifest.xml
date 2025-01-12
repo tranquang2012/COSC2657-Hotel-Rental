@@ -39,22 +39,19 @@
 
         <activity
             android:name=".NotificationsActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".AdminActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".SearchResultActivity"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".HomeActivity"
             android:exported="true"/>      
         <activity
             android:name=".PromotionActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".LoginActivity"
             android:exported="true">
@@ -65,7 +62,7 @@
         </activity>
         <activity
             android:name=".RegisterActivity"
-            android:exported="false" />
+            android:exported="true" />
     </application>
 
 </manifest>
