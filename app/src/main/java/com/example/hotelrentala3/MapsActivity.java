@@ -141,8 +141,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         for (QueryDocumentSnapshot document : task.getResult()) {
-                            Boolean availability = document.getBoolean("availability");
-                            if (availability != null && availability) {  // Only show available hotels
+                            Double availability = document.getDouble("availability");
+                            if (availability != null && availability > 0) {
                                 Double latitude = document.getDouble("latitude");
                                 Double longitude = document.getDouble("longitude");
                                 String name = document.getString("name");
@@ -154,8 +154,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                     Marker marker = mMap.addMarker(new MarkerOptions()
                                             .position(location)
                                             .title(name)
-                                            .icon(BitmapDescriptorFactory.fromBitmap(createCustomMarker(String.valueOf(price))))
-                                    );
+                                            .icon(BitmapDescriptorFactory.fromBitmap(createCustomMarker(String.valueOf(price)))));
 
                                     if (marker != null) {
                                         String hotelDetails = "Price: $" + price;
