@@ -27,7 +27,6 @@
                 android:contentDescription="Banner"
                 android:scaleType="centerInside" />
 
-            <!-- Destination Section -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="64dp"
@@ -38,16 +37,17 @@
 
                 <ImageView
                     android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_location"
-                    android:contentDescription="Location Icon" />
+                    android:layout_height="51dp"
+                    android:contentDescription="Location Icon"
+                    android:src="@drawable/ic_location" />
 
-                <EditText
-                    android:id="@+id/location"
+                <Spinner
+                    android:id="@+id/location_spinner"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:layout_marginStart="8dp"
                     android:background="@null"
+                    android:spinnerMode="dropdown"
                     android:hint="Destination"
                     android:textSize="16sp" />
             </LinearLayout>
