@@ -167,7 +167,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void navigateToHome() {
-        Intent intent = new Intent(LoginActivity.this, PromotionActivity.class);
+        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
         startActivity(intent);
         finish();
     }
