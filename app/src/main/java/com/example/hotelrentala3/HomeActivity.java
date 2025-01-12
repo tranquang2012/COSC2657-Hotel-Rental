@@ -57,20 +57,11 @@ public class HomeActivity extends AppCompatActivity {
                 }
             }
         });
-
-        // Navigate to CreateHotelActivity
-        buttonCreateHotel.setOnClickListener(v -> navigateToCreateHotel());
     }
 
     // Navigate to HotelSelectionActivity
     private void navigateToHotelSelection() {
         Intent intent = new Intent(HomeActivity.this, HotelSelectionActivity.class);
-        startActivity(intent);
-    }
-
-    // Navigate to CreateHotelActivity
-    private void navigateToCreateHotel() {
-        Intent intent = new Intent(HomeActivity.this, CreateHotelActivity.class);
         startActivity(intent);
     }
 

@@ -18,9 +18,8 @@ public class HotelSelectionActivity extends AppCompatActivity {
 
     private ListView listViewHotels;
     private FirebaseFirestore db;
-    private List<String> hotelList;
-    private List<DocumentSnapshot> hotelDocuments; // Store documents to map to user selection
-    private ArrayAdapter<String> adapter;
+    private List<DocumentSnapshot> hotelDocuments;
+    private HotelAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,9 +29,8 @@ public class HotelSelectionActivity extends AppCompatActivity {
         listViewHotels = findViewById(R.id.listViewHotels);
         db = FirebaseFirestore.getInstance();
 
-        hotelList = new ArrayList<>();
         hotelDocuments = new ArrayList<>();
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, hotelList);
+        adapter = new HotelAdapter(this, hotelDocuments);
         listViewHotels.setAdapter(adapter);
 
         // fetch and display hotels
@@ -52,24 +50,12 @@ public class HotelSelectionActivity extends AppCompatActivity {
 
     private void fetchHotelData() {
         db.collection("TestHotel")
-                .whereEqualTo("availability", true) // Filter by availability
+                .whereGreaterThan("availability", 0)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     if (!queryDocumentSnapshots.isEmpty()) {
-                        hotelList.clear();
                         hotelDocuments.clear();
-
-                        // Populate the list and map documents
-                        for (DocumentSnapshot document : queryDocumentSnapshots) {
-                            String name = document.getString("name");
-                            double price = document.getDouble("price");
-                            double rating = document.getDouble("rating");
-
-                            if (name != null) {
-                                hotelList.add(name + " - Price: $" + price + " - Rating: " + rating + "★");
-                                hotelDocuments.add(document); // Keep track of documents for selection
-                            }
-                        }
+                        hotelDocuments.addAll(queryDocumentSnapshots.getDocuments());
                         adapter.notifyDataSetChanged();
                     } else {
                         Toast.makeText(HotelSelectionActivity.this, "No available hotels found.", Toast.LENGTH_SHORT).show();

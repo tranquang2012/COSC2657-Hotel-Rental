@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -169,7 +170,7 @@ public class PaymentActivity extends AppCompatActivity {
     private void updateHotelAvailability() {
         db.collection("TestHotel")
                 .document(selectedHotelId)
-                .update("availability", false) // update hotel's availability
+                .update("availability", FieldValue.increment(-1)) // update hotel's availability
                 .addOnSuccessListener(aVoid -> showToast("Hotel availability updated."))
                 .addOnFailureListener(e -> showToast("Error updating hotel availability: " + e.getMessage()));
     }
