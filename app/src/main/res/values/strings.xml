@@ -1,6 +1,22 @@
 <resources>
     <string name="app_name">HotelRentalA3</string>
     <string name="default_web_client_id">272624475291-edg6iil97j6t9octfbcj1bshe2sustno.apps.googleusercontent.com</string>
+    <string name="card_number">Card Number</string>
+    <string name="enter_card_details">Enter Card Details</string>
+    <string name="valid_from_mm_yy">Valid From (MM/YY)</string>
+    <string name="expiration_date_mm_yy">Expiration Date (MM/YY)</string>
+    <string name="cvc">CVC</string>
+    <string name="make_payment">Make Payment</string>
+    <string-array name="card_type_array">
+        <item>Visa</item>
+        <item>MasterCard</item>
+        <item>JCB</item>
+    </string-array>
+    <string-array name="room_type_options">
+        <item>Single Room</item>
+        <item>Double Room</item>
+        <item>Suite</item>
+    </string-array>
     <string name="title_activity_maps">MapsActivity</string>
     <dimen name="bottom_sheet_peek_height">100dp</dimen>
     <dimen name="bottom_sheet_expanded_height">500dp</dimen>

@@ -216,6 +216,7 @@ public class AdminActivity extends AppCompatActivity {
         EditText availabilityEditText = dialogView.findViewById(R.id.hotelAvailability);
         EditText latitudeEditText = dialogView.findViewById(R.id.hotelLatitude);
         EditText longitudeEditText = dialogView.findViewById(R.id.hotelLongitude);
+
         builder.setPositiveButton("Add", (dialog, which) -> {
             String name = nameEditText.getText().toString();
             String description = descriptionEditText.getText().toString();
@@ -233,6 +234,7 @@ public class AdminActivity extends AppCompatActivity {
                     double doubleLatitude = Double.parseDouble(latitude);
                     double doubleLongitude = Double.parseDouble(longitude);
                     addHotel(name, description, intPrice, intAvailability, doubleLatitude, doubleLongitude, city);
+
                 } catch(NumberFormatException e) {
                     showToast("Price must be a valid number");
                 }
@@ -249,7 +251,9 @@ public class AdminActivity extends AppCompatActivity {
         dialog.show();
     }
 
+
     private void addHotel(String name, String description, int price, int availability, double latitude, double longitude, String city) {
+
         Map<String, Object> hotel = new HashMap<>();
         hotel.put("availability", availability);
         hotel.put("name", name);
@@ -266,7 +270,6 @@ public class AdminActivity extends AppCompatActivity {
             showToast("Failed to add hotel.");
         });
     }
-
     private void showCouponWindow() {
         LayoutInflater inflater = LayoutInflater.from(this);
         View dialogView = inflater.inflate(R.layout.popup_coupon, null);
