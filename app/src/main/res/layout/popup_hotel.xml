@@ -17,14 +17,20 @@
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:layout_marginHorizontal="10dp"
-        android:hint="Hotel name"/>
+        android:hint="Enter Hotel name"/>
 
     <EditText
         android:id="@+id/hotelDescription"
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:layout_marginHorizontal="10dp"
-        android:hint="Hotel description"/>
+        android:hint="Enter Hotel description"/>
+
+    <Spinner
+        android:id="@+id/dropdown"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginHorizontal="10dp"/>
 
     <EditText
         android:id="@+id/hotelLatitude"
@@ -47,13 +53,7 @@
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:layout_marginHorizontal="10dp"
-        android:hint="hotel price"
+        android:hint="Enter hotel price"
         android:inputType="number"/>
-
-<!--    <Button-->
-<!--        android:id="@+id/selectImageBtn"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="Select image"/>-->
 
 </LinearLayout>

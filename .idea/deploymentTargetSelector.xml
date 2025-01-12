@@ -9,6 +9,8 @@
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
       <SelectionState runConfigName="HistoryActivity">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
       <SelectionState runConfigName="BookingHistoryActivity">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
