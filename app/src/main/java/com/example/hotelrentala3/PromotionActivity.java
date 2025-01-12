@@ -44,7 +44,7 @@ public class PromotionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_home);
+        setContentView(R.layout.activity_promotion);
 
         countPromotions();
         Button promotionsBtn = findViewById(R.id.promotions);
