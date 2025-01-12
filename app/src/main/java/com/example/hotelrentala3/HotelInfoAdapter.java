@@ -11,12 +11,12 @@ import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.List;
 
-public class HotelAdapter extends BaseAdapter {
+public class HotelInfoAdapter extends BaseAdapter {
 
     private Context context;
     private List<DocumentSnapshot> hotelDocuments;
 
-    public HotelAdapter(Context context, List<DocumentSnapshot> hotelDocuments) {
+    public HotelInfoAdapter(Context context, List<DocumentSnapshot> hotelDocuments) {
         this.context = context;
         this.hotelDocuments = hotelDocuments;
     }

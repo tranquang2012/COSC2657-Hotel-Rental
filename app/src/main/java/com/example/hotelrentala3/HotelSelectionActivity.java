@@ -19,7 +19,7 @@ public class HotelSelectionActivity extends AppCompatActivity {
     private ListView listViewHotels;
     private FirebaseFirestore db;
     private List<DocumentSnapshot> hotelDocuments;
-    private HotelAdapter adapter;
+    private HotelInfoAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +34,7 @@ public class HotelSelectionActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
 
         hotelDocuments = new ArrayList<>();
-        adapter = new HotelAdapter(this, hotelDocuments);
+        adapter = new HotelInfoAdapter(this, hotelDocuments);
         listViewHotels.setAdapter(adapter);
 
         // fetch and display hotels
