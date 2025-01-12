@@ -7,6 +7,7 @@
     <string name="expiration_date_mm_yy">Expiration Date (MM/YY)</string>
     <string name="cvc">CVC</string>
     <string name="make_payment">Make Payment</string>
+    <string name="google_maps_key">AIzaSyDfRT6BY1MIRDdyTIHoPiEBuBkTJrMpZ9Q</string>
     <string-array name="card_type_array">
         <item>Visa</item>
         <item>MasterCard</item>
@@ -21,3 +22,4 @@
     <dimen name="bottom_sheet_peek_height">100dp</dimen>
     <dimen name="bottom_sheet_expanded_height">500dp</dimen>
 </resources>
+

@@ -41,6 +41,7 @@ public class SearchResultActivity extends AppCompatActivity {
         });
 
         hotelsRecyclerView = findViewById(R.id.rooms_recycler_view);
+        svHotelSearch = findViewById(R.id.sv_hotel_search);
         LinearLayout btnOpenMap = findViewById(R.id.btn_open_map);
         hotelsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
