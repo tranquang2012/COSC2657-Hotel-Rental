@@ -1,4 +1,4 @@
-package com.example.hotelrentala3;
+package com.example.hotelrentala3.Adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.example.hotelrentala3.R;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.List;
