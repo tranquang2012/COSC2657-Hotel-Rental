@@ -19,9 +19,6 @@
             android:name=".NotificationsActivity"
             android:exported="false" />
         <activity
-            android:name=".AdminActivity"
-            android:exported="false" />
-        <activity
             android:name=".RoomSelectionActivity"
             android:exported="false" />
         <activity
