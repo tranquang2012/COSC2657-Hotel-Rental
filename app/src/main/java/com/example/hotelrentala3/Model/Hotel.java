@@ -3,6 +3,7 @@ package com.example.hotelrentala3.Model;
 import java.io.Serializable;
 
 public class Hotel implements Serializable {
+    private String hotelId;
     private String name;
     private String location;
     private double latitude;
@@ -19,6 +20,10 @@ public class Hotel implements Serializable {
         this.availability = availability;
         this.price = price;
         this.rating = rating;
+    }
+
+    public String getHotelId() {
+        return hotelId;
     }
 
     public String getName() {

@@ -15,24 +15,31 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.hotelrentala3.Model.Hotel;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 public class RoomSelectionActivity extends AppCompatActivity {
-
-    private EditText editTextCheckInDate, editTextNumberOfNights, editTextCouponCode;
+    private EditText editTextCouponCode;
     private Spinner spinnerRoomType;
     private Button buttonNext, buttonApplyCoupon;
-    private TextView textViewPrice;
+    private TextView textViewCheckInDate, textViewCheckOutDate, textViewNumberOfNights, textViewPrice;
     private FirebaseFirestore db;
 
-    private String selectedHotelId;
-    private double hotelPrice;
+    private Hotel selectedHotel;
     private String selectedRoomType;
     private int numberOfNights = 0;
     private String checkInDate;
+    private String checkOutDate;
+    private double hotelPrice;
     private double discount = 0;
+
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,23 +52,30 @@ public class RoomSelectionActivity extends AppCompatActivity {
 
         db = FirebaseFirestore.getInstance();
 
-        editTextCheckInDate = findViewById(R.id.editTextCheckInDate);
-        editTextNumberOfNights = findViewById(R.id.editTextNumberOfNights);
+        textViewCheckInDate = findViewById(R.id.textViewCheckInDate);
+        textViewCheckOutDate = findViewById(R.id.textViewCheckOutDate);
+        textViewNumberOfNights = findViewById(R.id.textViewNumberOfNights);
+        textViewPrice = findViewById(R.id.textViewPrice);
         editTextCouponCode = findViewById(R.id.editTextCouponCode);
         spinnerRoomType = findViewById(R.id.spinnerRoomType);
         buttonNext = findViewById(R.id.buttonNext);
         buttonApplyCoupon = findViewById(R.id.buttonApplyCoupon);
-        textViewPrice = findViewById(R.id.textViewPrice);
 
-        selectedHotelId = getIntent().getStringExtra("selectedHotelId");
-        if (selectedHotelId == null) {
+        selectedHotel = (Hotel) getIntent().getSerializableExtra("selectedHotel");
+        if (selectedHotel == null) {
             showToast("Hotel not selected. Please try again.");
             finish();
-        } else {
-            fetchHotelData(selectedHotelId);
+            return;
         }
 
-        editTextCheckInDate.setOnClickListener(v -> openDatePicker());
+        hotelPrice = selectedHotel.getPrice();
+
+        // Display passed dates
+        textViewCheckInDate.setText("Check-In Date: " + checkInDate);
+        textViewCheckOutDate.setText("Check-Out Date: " + checkOutDate);
+
+        // Calculate the number of nights
+        calculateNumberOfNights();
 
         spinnerRoomType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -76,68 +90,46 @@ public class RoomSelectionActivity extends AppCompatActivity {
             }
         });
 
-        editTextNumberOfNights.addTextChangedListener(new android.text.TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                updatePrice();
-            }
-
-            @Override
-            public void afterTextChanged(android.text.Editable s) {}
-        });
-
         buttonApplyCoupon.setOnClickListener(v -> applyCoupon());
 
         buttonNext.setOnClickListener(v -> processRoomSelection());
     }
 
-    private void fetchHotelData(String hotelId) {
-        db.collection("TestHotel")
-                .document(hotelId)
-                .get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        hotelPrice = documentSnapshot.getDouble("price");
-                        updatePrice();
-                    } else {
-                        showToast("Hotel not found.");
-                    }
-                })
-                .addOnFailureListener(e -> showToast("Error fetching hotel data: " + e.getMessage()));
+    private void setDefaultDates() {
+        Calendar calendar = Calendar.getInstance();
+        checkInDate = dateFormat.format(calendar.getTime());
+        textViewCheckInDate.setText("Check-In Date: " + checkInDate);
+
+        // Set default check-out date (next day)
+        calendar.add(Calendar.DAY_OF_MONTH, 1);
+        checkOutDate = dateFormat.format(calendar.getTime());
+        textViewCheckOutDate.setText("Check-Out Date: " + checkOutDate);
+
+        // Calculate default number of nights
+        calculateNumberOfNights();
     }
 
-    private void openDatePicker() {
-        Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
+    private void calculateNumberOfNights() {
+        try {
+            Date checkIn = dateFormat.parse(checkInDate);
+            Date checkOut = dateFormat.parse(checkOutDate);
 
-        DatePickerDialog datePickerDialog = new DatePickerDialog(this,
-                (view, year1, month1, dayOfMonth) -> {
-                    checkInDate = (month1 + 1) + "/" + dayOfMonth + "/" + year1;
-                    editTextCheckInDate.setText(checkInDate);
-                }, year, month, day);
-        datePickerDialog.show();
+            if (checkIn != null && checkOut != null) {
+                long differenceInMillis = checkOut.getTime() - checkIn.getTime();
+                numberOfNights = (int) (differenceInMillis / (1000 * 60 * 60 * 24));
+                textViewNumberOfNights.setText("Number of Nights: " + numberOfNights);
+                updatePrice();
+            }
+        } catch (ParseException e) {
+            showToast("Error calculating number of nights.");
+        }
     }
 
     private void updatePrice() {
-        String nightsStr = editTextNumberOfNights.getText().toString();
-        if (!TextUtils.isEmpty(nightsStr) && hotelPrice > 0) {
-            numberOfNights = Integer.parseInt(nightsStr);
-
+        if (numberOfNights > 0 && selectedHotel != null && selectedRoomType != null) {
             double roomTypeMultiplier = getRoomTypeMultiplier(selectedRoomType);
-
-            double totalPriceBeforeDiscount = hotelPrice * numberOfNights * roomTypeMultiplier;
-            double finalPrice = totalPriceBeforeDiscount - discount;
-
-            if (finalPrice < 0) {
-                finalPrice = 0;
-            }
-
-            textViewPrice.setText(String.format("Total Price: $%.2f", finalPrice));
+            double totalPrice = selectedHotel.getPrice() * numberOfNights * roomTypeMultiplier;
+            textViewPrice.setText(String.format(Locale.getDefault(), "Total Price: $%.2f", totalPrice));
         }
     }
 
@@ -207,7 +199,7 @@ public class RoomSelectionActivity extends AppCompatActivity {
 
 
     private void processRoomSelection() {
-        String nightsStr = editTextNumberOfNights.getText().toString();
+        String nightsStr = textViewNumberOfNights.getText().toString();
         if (TextUtils.isEmpty(nightsStr)) {
             showToast("Please enter the number of nights.");
             return;
@@ -235,7 +227,7 @@ public class RoomSelectionActivity extends AppCompatActivity {
         }
 
         Intent intent = new Intent(this, PaymentActivity.class);
-        intent.putExtra("selectedHotelId", selectedHotelId);
+        intent.putExtra("selectedHotelId", selectedHotel.getHotelId());
         intent.putExtra("selectedRoomType", selectedRoomType);
         intent.putExtra("checkInDate", checkInDate);
         intent.putExtra("numberOfNights", numberOfNights);

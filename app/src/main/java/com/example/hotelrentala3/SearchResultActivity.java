@@ -52,9 +52,17 @@ public class SearchResultActivity extends AppCompatActivity {
 
         location = getIntent().getStringExtra("location");
 
+        // Initialize filteredList with the full hotel list
         filteredList = new ArrayList<>(hotelList);
 
-        hotelAdapter = new HotelAdapter(filteredList);
+        hotelAdapter = new HotelAdapter(filteredList, hotel -> {
+            // Navigate to RoomSelectionActivity with the selected hotel's details
+            Intent intent = new Intent(SearchResultActivity.this, RoomSelectionActivity.class);
+            intent.putExtra("checkInDate", getIntent().getStringExtra("checkInDate"));
+            intent.putExtra("checkOutDate", getIntent().getStringExtra("checkOutDate"));
+            intent.putExtra("selectedHotel", hotel);
+            startActivity(intent);
+        });
         hotelsRecyclerView.setAdapter(hotelAdapter);
 
         setupSearch();

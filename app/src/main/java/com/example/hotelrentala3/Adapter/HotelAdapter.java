@@ -3,6 +3,7 @@ package com.example.hotelrentala3.Adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,10 +17,19 @@ import java.util.List;
 public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelViewHolder> {
 
     private List<Hotel> hotelList;
+    private AdapterView.OnItemClickListener onItemClickListener;
 
-    public HotelAdapter(List<Hotel> hotelList) {
-        this.hotelList = hotelList;
+    // Interface for item click listener
+    public interface OnItemClickListener {
+        void onItemClick(Hotel hotel);
     }
+
+
+    public HotelAdapter(List<Hotel> hotelList, OnItemClickListener onItemClickListener) {
+        this.hotelList = hotelList;
+        this.onItemClickListener = (AdapterView.OnItemClickListener) onItemClickListener;
+    }
+
 
     @NonNull
     @Override
