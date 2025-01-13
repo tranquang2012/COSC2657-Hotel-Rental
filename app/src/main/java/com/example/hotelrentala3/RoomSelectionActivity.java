@@ -39,11 +39,10 @@ public class RoomSelectionActivity extends AppCompatActivity {
     private double hotelPrice;
     private double discount = 0;
 
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getSupportActionBar().hide();
 
@@ -70,13 +69,21 @@ public class RoomSelectionActivity extends AppCompatActivity {
 
         hotelPrice = selectedHotel.getPrice();
 
-        // Display passed dates
-        textViewCheckInDate.setText("Check-In Date: " + checkInDate);
-        textViewCheckOutDate.setText("Check-Out Date: " + checkOutDate);
+        // Retrieve dates from intent if passed
+        checkInDate = getIntent().getStringExtra("checkInDate");
+        checkOutDate = getIntent().getStringExtra("checkOutDate");
 
-        // Calculate the number of nights
-        calculateNumberOfNights();
+        // If dates are not passed, set default dates
+        if (checkInDate == null || checkOutDate == null) {
+            setDefaultDates();
+        } else {
+            // Display passed dates
+            textViewCheckInDate.setText("Check-In Date: " + checkInDate);
+            textViewCheckOutDate.setText("Check-Out Date: " + checkOutDate);
 
+            // Calculate the number of nights based on passed dates
+            calculateNumberOfNights();
+        }
         spinnerRoomType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

@@ -3,7 +3,6 @@ package com.example.hotelrentala3.Adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,7 +16,7 @@ import java.util.List;
 public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelViewHolder> {
 
     private List<Hotel> hotelList;
-    private AdapterView.OnItemClickListener onItemClickListener;
+    private OnItemClickListener onItemClickListener;
 
     // Interface for item click listener
     public interface OnItemClickListener {
@@ -27,9 +26,8 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelViewHol
 
     public HotelAdapter(List<Hotel> hotelList, OnItemClickListener onItemClickListener) {
         this.hotelList = hotelList;
-        this.onItemClickListener = (AdapterView.OnItemClickListener) onItemClickListener;
+        this.onItemClickListener = onItemClickListener;
     }
-
 
     @NonNull
     @Override
@@ -47,8 +45,12 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelViewHol
         holder.availability.setText("Rooms Available: " + hotel.getAvailability() + " rooms");
         holder.price.setText("Price: $" + hotel.getPrice());
         holder.rating.setText("Rating: " + hotel.getRating());
+        holder.itemView.setOnClickListener(v -> {
+            if (onItemClickListener != null) {
+                onItemClickListener.onItemClick(hotel);
+            }
+        });
     }
-
 
     @Override
     public int getItemCount() {
@@ -68,4 +70,3 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelViewHol
         }
     }
 }
-
