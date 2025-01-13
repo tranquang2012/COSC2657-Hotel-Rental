@@ -27,10 +27,14 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.hotelrentala3.Model.Hotel;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -43,6 +47,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private FirebaseFirestore db;
     private FirebaseAuth auth;
+    private GoogleSignInClient mGoogleSignInClient;
     private TextView checkInDate;
     private TextView checkOutDate;
     private TextView tvRoomGuestInfo;
@@ -72,9 +77,15 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+
         // Initialize Firestore and views
         db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
         locationSpinner = findViewById(R.id.location_spinner);  // Spinner for city selection
         checkInDate = findViewById(R.id.checkin_date);
         checkOutDate = findViewById(R.id.checkout_date);
@@ -116,13 +127,29 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        logoutButton.setOnClickListener(view -> {
-            FirebaseAuth.getInstance().signOut();
-            Toast.makeText(this, "Logged out successfully", Toast.LENGTH_SHORT).show();
+        logoutButton.setOnClickListener(v -> {
+            FirebaseUser user = auth.getCurrentUser();
 
-            Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
-            startActivity(intent);
-            finish();
+            if (user != null) {
+                // Check if the user is signed in with Google
+                if (user.getProviderData().stream().anyMatch(profile -> profile.getProviderId().equals("google.com"))) {
+                    // Sign out from Google
+                    mGoogleSignInClient.signOut()
+                            .addOnCompleteListener(this, task -> {
+                                // Sign out from Firebase
+                                auth.signOut();
+                                Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
+                                startActivity(intent);
+                                finish();
+                            });
+                } else {
+                    // If signed in with email/password, just sign out from Firebase
+                    auth.signOut();
+                    Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+            }
         });
     }
 
