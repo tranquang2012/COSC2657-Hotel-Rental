@@ -71,11 +71,11 @@ public class SearchResultActivity extends AppCompatActivity {
 
         setupSearch();
 
-        // Map Button Click Listener
         btnOpenMap.setOnClickListener(view -> {
-            Intent intent = new Intent(SearchResultActivity.this, MapsActivity.class);
-            intent.putExtra("location", location); // pass location to map
-            startActivity(intent);
+            Intent mapIntent = new Intent(this, MapsActivity.class);
+            mapIntent.putExtra("availableHotels", new ArrayList<>(filteredList));
+            mapIntent.putExtra("location", location.trim());
+            startActivity(mapIntent);
         });
     }
 
