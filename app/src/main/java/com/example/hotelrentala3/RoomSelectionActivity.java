@@ -50,6 +50,7 @@ public class RoomSelectionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room_selection);
 
+        db = FirebaseFirestore.getInstance();
 
         textViewCheckInDate = findViewById(R.id.textViewCheckInDate);
         textViewCheckOutDate = findViewById(R.id.textViewCheckOutDate);
@@ -66,6 +67,8 @@ public class RoomSelectionActivity extends AppCompatActivity {
             finish();
             return;
         }
+
+        hotelPrice = selectedHotel.getPrice();
 
         // Display passed dates
         textViewCheckInDate.setText("Check-In Date: " + checkInDate);
