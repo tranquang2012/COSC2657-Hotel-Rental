@@ -57,6 +57,7 @@ public class HomeActivity extends AppCompatActivity {
         TextView searchButton = findViewById(R.id.search_button);
         tvRoomGuestInfo = findViewById(R.id.tv_room_guest_info);
         Button historyButton = findViewById(R.id.btn_history);
+        Button logoutButton = findViewById(R.id.btn_logout);
         String[] items = {"Ho Chi Minh", "Hanoi", "Da Nang"};
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
@@ -89,6 +90,15 @@ public class HomeActivity extends AppCompatActivity {
             } else {
                 Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show();
             }
+        });
+
+        logoutButton.setOnClickListener(view -> {
+            FirebaseAuth.getInstance().signOut();
+            Toast.makeText(this, "Logged out successfully", Toast.LENGTH_SHORT).show();
+
+            Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
+            startActivity(intent);
+            finish();
         });
     }
 
