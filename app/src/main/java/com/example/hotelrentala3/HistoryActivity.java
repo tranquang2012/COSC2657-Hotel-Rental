@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -27,20 +28,41 @@ public class HistoryActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private List<Booking> bookingList;
     private BookingAdapter adapter;
-    private String userId = "RH0FWNGtLvWKeAl17vGNNSMjm9i2"; // Replace with dynamic user ID logic if needed.
+    private String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
 
+        // Get userId from intent
+        userId = getIntent().getStringExtra("userId");
+        if (userId == null) {
+            Toast.makeText(this, "Invalid user ID", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
         recyclerView = findViewById(R.id.recyclerViewHistory);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         bookingList = new ArrayList<>();
-        adapter = new BookingAdapter(bookingList, this::navigateToDetails);
+        adapter = new BookingAdapter(bookingList, booking -> {
+            // Navigate to details
+            Intent intent = new Intent(this, DetailsActivity.class);
+            intent.putExtra("booking", booking);
+            startActivity(intent);
+        });
         recyclerView.setAdapter(adapter);
 
         db = FirebaseFirestore.getInstance();
+
+        ImageButton backButton = findViewById(R.id.backButton);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navigateToHome();
+            }
+        });
 
         fetchBookingHistory();
     }
@@ -48,7 +70,6 @@ public class HistoryActivity extends AppCompatActivity {
     private void fetchBookingHistory() {
         db.collection("BookingHistory")
                 .whereEqualTo("userId", userId)
-                .orderBy("timestamp", Query.Direction.DESCENDING)
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -68,18 +89,17 @@ public class HistoryActivity extends AppCompatActivity {
                         }
                     } else {
                         Log.e(TAG, "Error fetching booking history: ", task.getException());
-                        Toast.makeText(this, "Error fetching data", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Error fetching data: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
-    private void navigateToDetails(Booking booking) {
-        Intent intent = new Intent(this, DetailsActivity.class);
-        intent.putExtra("booking", booking);
-        startActivity(intent);
+    private void navigateToHome() {
+        Intent homeIntent = new Intent(HistoryActivity.this, HomeActivity.class);
+        startActivity(homeIntent);
+        finish();
     }
 
-    // Model class for Booking
     public static class Booking implements Serializable {
         private String checkInDate;
         private int finalPrice;
