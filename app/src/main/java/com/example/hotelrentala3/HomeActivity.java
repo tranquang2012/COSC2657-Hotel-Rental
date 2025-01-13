@@ -116,8 +116,10 @@ public class HomeActivity extends AppCompatActivity {
                     String selectedDate = selectedYear + "-" + (selectedMonth + 1) + "-" + selectedDay;
                     if (dateType.equals("checkin")) {
                         checkInDate.setText(selectedDate);
+                        checkInDateString = checkInDate.getText().toString();
                     } else {
                         checkOutDate.setText(selectedDate);
+                        checkOutDateString = checkOutDate.getText().toString();
                     }
                 }, year, month, day);
 
@@ -194,7 +196,7 @@ public class HomeActivity extends AppCompatActivity {
                         // Check if the availability matches the number of persons
                         if (availability >= numberOfPersons) {
                             // Add the room to the list
-                            availableHotels.add(new Hotel(name, location, latitude, longitude, availability, price, rating));
+                            availableHotels.add(new Hotel(hotelID, name, location, latitude, longitude, availability, price, rating));
                         }
                     }
 
@@ -211,8 +213,6 @@ public class HomeActivity extends AppCompatActivity {
 
     // Launches the ResultActivity with the list of available rooms
     private void showAvailableRooms(List<Hotel> availableHotels) {
-        checkInDateString = checkInDate.getText().toString();
-        checkOutDateString = checkOutDate.getText().toString();
         Intent intent = new Intent(this, SearchResultActivity.class);
         intent.putExtra("availableHotels", (Serializable) availableHotels);
         intent.putExtra("location", locationSpinner.getSelectedItem().toString());  // Pass selected location

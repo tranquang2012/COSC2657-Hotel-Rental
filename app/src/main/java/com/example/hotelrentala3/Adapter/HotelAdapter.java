@@ -3,6 +3,7 @@ package com.example.hotelrentala3.Adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -29,6 +30,7 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelViewHol
         this.onItemClickListener = onItemClickListener;
     }
 
+
     @NonNull
     @Override
     public HotelViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -52,6 +54,7 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelViewHol
         });
     }
 
+
     @Override
     public int getItemCount() {
         return hotelList.size();
@@ -70,3 +73,4 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.HotelViewHol
         }
     }
 }
+

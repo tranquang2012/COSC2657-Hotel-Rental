@@ -43,6 +43,7 @@ public class RoomSelectionActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getSupportActionBar().hide();
 
@@ -206,21 +207,9 @@ public class RoomSelectionActivity extends AppCompatActivity {
 
 
     private void processRoomSelection() {
-        String nightsStr = textViewNumberOfNights.getText().toString();
-        if (TextUtils.isEmpty(nightsStr)) {
-            showToast("Please enter the number of nights.");
-            return;
-        }
-
-        numberOfNights = Integer.parseInt(nightsStr);
 
         if (TextUtils.isEmpty(selectedRoomType)) {
             showToast("Please select a room type.");
-            return;
-        }
-
-        if (TextUtils.isEmpty(checkInDate)) {
-            showToast("Please select a check-in date.");
             return;
         }
 

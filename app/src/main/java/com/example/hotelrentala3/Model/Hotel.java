@@ -12,7 +12,8 @@ public class Hotel implements Serializable {
     private double price;
     private double rating;
 
-    public Hotel(String name, String location, double latitude, double longitude, int availability, double price, double rating) {
+    public Hotel(String hotelId, String name, String location, double latitude, double longitude, int availability, double price, double rating) {
+        this.hotelId = hotelId;
         this.name = name;
         this.location = location;
         this.latitude = latitude;
