@@ -1,4 +1,4 @@
-package com.example.hotelrentala3;
+package com.example.hotelrentala3.Adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +8,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.hotelrentala3.HistoryActivity;
+import com.example.hotelrentala3.R;
 
 import java.util.List;
 
