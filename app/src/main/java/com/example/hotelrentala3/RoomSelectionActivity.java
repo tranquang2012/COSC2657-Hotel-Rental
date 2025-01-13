@@ -137,7 +137,7 @@ public class RoomSelectionActivity extends AppCompatActivity {
             double roomTypeMultiplier = getRoomTypeMultiplier(selectedRoomType);
             double totalPrice = (selectedHotel.getPrice() * numberOfNights * roomTypeMultiplier);
             double finalPrice = totalPrice - discount;
-            textViewPrice.setText(String.format(Locale.getDefault(), "Total Price: %.2f VND", finalPrice));
+            textViewPrice.setText(String.format(Locale.getDefault(), "Total Price: $%.2f", finalPrice));
         }
     }
 

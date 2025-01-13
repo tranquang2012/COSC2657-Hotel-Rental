@@ -124,7 +124,7 @@ public class PaymentActivity extends AppCompatActivity {
 
         String confirmationMessage =
                 "Card Type: " + selectedCardType + "\n" +
-                "Amount: " + finalPrice + " VND\n" +
+                "Amount: $" + finalPrice + "\n" +
                 "Card Number: " + editTextCardNumber.getText().toString() + "\n\n" +
                 "Do you want to confirm the payment?";
 
