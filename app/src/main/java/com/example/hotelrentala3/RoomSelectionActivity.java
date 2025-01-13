@@ -1,6 +1,5 @@
 package com.example.hotelrentala3;
 
-import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -89,7 +88,7 @@ public class RoomSelectionActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 selectedRoomType = parent.getItemAtPosition(position).toString();
-                updatePrice();
+                updatePrice(discount);
             }
 
             @Override
@@ -126,17 +125,17 @@ public class RoomSelectionActivity extends AppCompatActivity {
                 long differenceInMillis = checkOut.getTime() - checkIn.getTime();
                 numberOfNights = (int) (differenceInMillis / (1000 * 60 * 60 * 24));
                 textViewNumberOfNights.setText("Number of Nights: " + numberOfNights);
-                updatePrice();
+                updatePrice(discount);
             }
         } catch (ParseException e) {
             showToast("Error calculating number of nights.");
         }
     }
 
-    private void updatePrice() {
+    private void updatePrice(double discount) {
         if (numberOfNights > 0 && selectedHotel != null && selectedRoomType != null) {
             double roomTypeMultiplier = getRoomTypeMultiplier(selectedRoomType);
-            double totalPrice = selectedHotel.getPrice() * numberOfNights * roomTypeMultiplier;
+            double totalPrice = (selectedHotel.getPrice() * numberOfNights * roomTypeMultiplier) - discount;
             textViewPrice.setText(String.format(Locale.getDefault(), "Total Price: $%.2f", totalPrice));
         }
     }
@@ -158,7 +157,7 @@ public class RoomSelectionActivity extends AppCompatActivity {
         if (TextUtils.isEmpty(couponCode)) {
 
             discount = 0;
-            updatePrice();
+            updatePrice(discount);
             showToast("No coupon applied.");
             return;
         }
@@ -177,17 +176,17 @@ public class RoomSelectionActivity extends AppCompatActivity {
                         } catch (NumberFormatException e) {
                             showToast("Invalid discount value in coupon.");
                             discount = 0;
-                            updatePrice();
+                            updatePrice(discount);
                         }
                     } else {
                         discount = 0;
-                        updatePrice();
+                        updatePrice(discount);
                         showToast("Invalid coupon code.");
                     }
                 })
                 .addOnFailureListener(e -> {
                     discount = 0;
-                    updatePrice();
+                    updatePrice(discount);
                     showToast("Error fetching coupon data: " + e.getMessage());
                 });
     }
@@ -202,7 +201,7 @@ public class RoomSelectionActivity extends AppCompatActivity {
             // full discount
             discount = couponDiscount;
         }
-        updatePrice();
+        updatePrice(discount);
     }
 
 
