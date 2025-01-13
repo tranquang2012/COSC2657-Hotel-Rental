@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -55,6 +56,14 @@ public class HistoryActivity extends AppCompatActivity {
 
         db = FirebaseFirestore.getInstance();
 
+        ImageButton backButton = findViewById(R.id.backButton);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navigateToHome();
+            }
+        });
+
         fetchBookingHistory();
     }
 
@@ -85,10 +94,10 @@ public class HistoryActivity extends AppCompatActivity {
                 });
     }
 
-    private void navigateToDetails(Booking booking) {
-        Intent intent = new Intent(this, DetailsActivity.class);
-        intent.putExtra("booking", booking);
-        startActivity(intent);
+    private void navigateToHome() {
+        Intent homeIntent = new Intent(HistoryActivity.this, HomeActivity.class);
+        startActivity(homeIntent);
+        finish();
     }
 
     public static class Booking implements Serializable {
