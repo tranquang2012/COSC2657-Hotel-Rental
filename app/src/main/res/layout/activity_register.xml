@@ -13,8 +13,10 @@
         android:layout_height="wrap_content"
         android:text="Hotel Rental"
         android:textSize="24sp"
+        android:textColor="@color/primaryColor"
         android:fontFamily="sans-serif-medium"
-        android:layout_marginBottom="32dp" />
+        android:layout_marginBottom="32dp"
+        android:textAlignment="center" />
 
     <EditText
         android:id="@+id/editTextFullName"
@@ -24,7 +26,8 @@
         android:inputType="textPersonName"
         android:padding="12dp"
         android:textSize="16sp"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/rounded_background" />
 
     <EditText
         android:id="@+id/editTextEmail"
@@ -34,7 +37,8 @@
         android:inputType="textEmailAddress"
         android:padding="12dp"
         android:textSize="16sp"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/rounded_background" />
 
     <EditText
         android:id="@+id/editTextPassword"
@@ -44,7 +48,8 @@
         android:inputType="textPassword"
         android:padding="12dp"
         android:textSize="16sp"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/rounded_background" />
 
     <EditText
         android:id="@+id/editTextConfirmPassword"
@@ -54,7 +59,8 @@
         android:inputType="textPassword"
         android:padding="12dp"
         android:textSize="16sp"
-        android:layout_marginBottom="24dp" />
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/rounded_background" />
 
     <Button
         android:id="@+id/buttonRegister"
@@ -63,7 +69,10 @@
         android:text="Register"
         android:textSize="16sp"
         android:padding="12dp"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="@color/primaryColor"
+        android:textColor="@android:color/white"
+        android:layout_gravity="center" />
 
     <TextView
         android:id="@+id/textViewLoginPrompt"
@@ -71,7 +80,9 @@
         android:layout_height="wrap_content"
         android:text="Already have an account?"
         android:textSize="14sp"
-        android:layout_marginBottom="8dp" />
+        android:textColor="@color/primaryColor"
+        android:layout_marginBottom="8dp"
+        android:textAlignment="center" />
 
     <Button
         android:id="@+id/buttonGoToLogin"
@@ -79,5 +90,8 @@
         android:layout_height="wrap_content"
         android:text="Login"
         android:textSize="16sp"
-        android:padding="12dp" />
+        android:padding="12dp"
+        android:backgroundTint="@color/primaryColor"
+        android:textColor="@android:color/white"
+        android:layout_gravity="center" />
 </LinearLayout>

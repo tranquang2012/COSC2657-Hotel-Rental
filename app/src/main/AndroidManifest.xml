@@ -47,9 +47,6 @@
             android:name=".HomeActivity"
             android:exported="true" />
         <activity
-            android:name=".PromotionActivity"
-            android:exported="true" />
-        <activity
             android:name=".RoomSelectionActivity"
             android:exported="false" />
         <activity
