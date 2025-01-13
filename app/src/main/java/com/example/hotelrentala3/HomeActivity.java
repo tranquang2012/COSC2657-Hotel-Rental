@@ -34,6 +34,8 @@ public class HomeActivity extends AppCompatActivity {
     private TextView tvRoomGuestInfo;
     private Spinner locationSpinner;  // Spinner for location selection
     private int numberOfPersons = 1, numberOfRooms = 1;
+    private String checkInDateString = null; // Initialize with null
+    private String checkOutDateString = null; // Initialize with null
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,7 +136,7 @@ public class HomeActivity extends AppCompatActivity {
 
         // Done button action
         btnDone.setOnClickListener(view -> {
-            String roomGuestInfo = tvPersonsCount.getText() + " Adults, "
+            String roomGuestInfo = tvPersonsCount.getText() + " Persons, "
                     + tvRoomsCount.getText() + " Rooms";
             tvRoomGuestInfo.setText(roomGuestInfo);
             dialog.dismiss();
@@ -156,6 +158,7 @@ public class HomeActivity extends AppCompatActivity {
                     List<Hotel> availableHotels = new ArrayList<>();
 
                     for (DocumentSnapshot hotelSnapshot : queryDocumentSnapshots.getDocuments()) {
+                        String hotelID = hotelSnapshot.getId();
                         String name = hotelSnapshot.getString("name");
                         double latitude = hotelSnapshot.getDouble("latitude");
                         double longitude = hotelSnapshot.getDouble("longitude");
@@ -183,9 +186,13 @@ public class HomeActivity extends AppCompatActivity {
 
     // Launches the ResultActivity with the list of available rooms
     private void showAvailableRooms(List<Hotel> availableHotels) {
+        checkInDateString = checkInDate.getText().toString();
+        checkOutDateString = checkOutDate.getText().toString();
         Intent intent = new Intent(this, SearchResultActivity.class);
         intent.putExtra("availableHotels", (Serializable) availableHotels);
         intent.putExtra("location", locationSpinner.getSelectedItem().toString());  // Pass selected location
+        intent.putExtra("checkInDate", checkInDateString);
+        intent.putExtra("checkOutDate", checkOutDateString);
         startActivity(intent);
     }
 }
