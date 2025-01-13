@@ -11,15 +11,18 @@
         android:orientation="vertical"
         android:gravity="center_horizontal">
 
+        <!-- Title -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/enter_card_details"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:paddingBottom="16dp"
-            android:gravity="center"/>
+            android:textColor="@color/primaryColor"
+            android:gravity="center"
+            android:paddingBottom="16dp" />
 
+        <!-- Card Type Spinner -->
         <Spinner
             android:id="@+id/spinnerCardType"
             android:layout_width="match_parent"
@@ -27,8 +30,10 @@
             android:spinnerMode="dropdown"
             android:entries="@array/card_type_array"
             android:layout_marginBottom="16dp"
-            />
+            android:paddingVertical="8dp"
+            android:background="@drawable/rounded_background" />
 
+        <!-- Card Number EditText -->
         <EditText
             android:id="@+id/editTextCardNumber"
             android:layout_width="match_parent"
@@ -38,8 +43,9 @@
             android:textSize="16sp"
             android:padding="12dp"
             android:layout_marginBottom="16dp"
-            />
+            android:background="@drawable/rounded_background" />
 
+        <!-- Valid From EditText -->
         <EditText
             android:id="@+id/editTextCardValidFrom"
             android:layout_width="match_parent"
@@ -49,8 +55,9 @@
             android:textSize="16sp"
             android:padding="12dp"
             android:layout_marginBottom="16dp"
-            />
+            android:background="@drawable/rounded_background" />
 
+        <!-- Expiry Date EditText -->
         <EditText
             android:id="@+id/editTextCardExpiry"
             android:layout_width="match_parent"
@@ -60,8 +67,9 @@
             android:textSize="16sp"
             android:padding="12dp"
             android:layout_marginBottom="16dp"
-            />
+            android:background="@drawable/rounded_background" />
 
+        <!-- CVC EditText -->
         <EditText
             android:id="@+id/editTextCVC"
             android:layout_width="match_parent"
@@ -70,17 +78,20 @@
             android:inputType="numberPassword"
             android:textSize="16sp"
             android:padding="12dp"
-            android:layout_marginBottom="24dp" />
+            android:layout_marginBottom="24dp"
+            android:background="@drawable/rounded_background" />
 
+        <!-- Make Payment Button -->
         <Button
             android:id="@+id/buttonMakePayment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/make_payment"
             android:textSize="16sp"
-            android:textColor="@color/white"
+            android:textColor="@android:color/white"
             android:padding="12dp"
-            android:layout_marginTop="24dp"/>
+            android:layout_marginTop="24dp"
+            android:backgroundTint="@color/primaryColor" />
 
     </LinearLayout>
 </ScrollView>

@@ -2,6 +2,7 @@ package com.example.hotelrentala3;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
 
@@ -31,6 +32,9 @@ public class SearchResultActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getSupportActionBar().hide();
+
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_search_result);

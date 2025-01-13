@@ -3,6 +3,7 @@ package com.example.hotelrentala3;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,6 +27,9 @@ public class NotificationsActivity extends AppCompatActivity {
     private LinearLayout promotionsLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getSupportActionBar().hide();
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notifications);
         promotionsLayout = findViewById(R.id.promotionsLayout);

@@ -10,6 +10,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -50,6 +51,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getSupportActionBar().hide();
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
@@ -201,7 +205,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                             .icon(BitmapDescriptorFactory.fromBitmap(createCustomMarker(String.valueOf(price)))));
 
                                     if (marker != null) {
-                                        String hotelDetails = "Price: $" + price;
+                                        String hotelDetails = "Price: " + price + "VND";
                                         if (rating != null) {
                                             hotelDetails += "\nRating: " + rating + " ⭐";  // Add rating to details
                                         }

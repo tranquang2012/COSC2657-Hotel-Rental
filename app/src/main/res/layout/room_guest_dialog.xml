@@ -71,6 +71,7 @@
             android:background="@drawable/square_button_background"
             android:text="-"
             android:textSize="18sp"
+            android:backgroundTint="@color/primaryColor"
             android:textColor="@android:color/white" />
 
         <TextView
@@ -87,9 +88,11 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:background="@drawable/square_button_background"
+            android:backgroundTint="@color/primaryColor"
             android:text="+"
             android:textSize="18sp"
             android:textColor="@android:color/white" />
+
     </LinearLayout>
 
     <!-- Done Button -->

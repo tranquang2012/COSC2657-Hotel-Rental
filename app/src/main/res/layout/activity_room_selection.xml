@@ -6,61 +6,79 @@
     android:padding="16dp"
     android:spacing="16dp">
 
+    <!-- Check-In Date -->
     <TextView
         android:id="@+id/textViewCheckInDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Check-In Date: "
-        android:textSize="16sp"
-        android:paddingTop="8dp"
+        android:textSize="18sp"
+        android:paddingTop="16dp"
         android:clickable="true"
         android:focusable="true"
-        android:textColor="@android:color/holo_blue_dark"
-        android:importantForAccessibility="yes" />
+        android:textColor="@color/primaryColor"
+        android:importantForAccessibility="yes"
+        android:layout_marginBottom="16dp"
+        android:contentDescription="Check-In Date" />
 
+    <!-- Check-Out Date -->
     <TextView
         android:id="@+id/textViewCheckOutDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Check-Out Date: "
-        android:textSize="16sp"
-        android:paddingTop="8dp"
+        android:textSize="18sp"
+        android:paddingTop="16dp"
         android:clickable="true"
         android:focusable="true"
-        android:textColor="@android:color/holo_blue_dark"
-        android:importantForAccessibility="yes" />
+        android:textColor="@color/primaryColor"
+        android:importantForAccessibility="yes"
+        android:layout_marginBottom="16dp"
+        android:contentDescription="Check-Out Date" />
 
+    <!-- Number of Nights -->
     <TextView
         android:id="@+id/textViewNumberOfNights"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Number of Nights: "
-        android:textSize="16sp"
-        android:paddingTop="8dp"
+        android:textSize="18sp"
+        android:paddingTop="16dp"
         android:clickable="true"
         android:focusable="true"
-        android:textColor="@android:color/holo_blue_dark"
-        android:importantForAccessibility="yes" />
+        android:textColor="@color/primaryColor"
+        android:importantForAccessibility="yes"
+        android:layout_marginBottom="16dp"
+        android:contentDescription="Number of Nights" />
 
+    <!-- Room Type Spinner -->
     <Spinner
         android:id="@+id/spinnerRoomType"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:entries="@array/room_type_options"
         android:importantForAccessibility="yes"
-        android:contentDescription="Room Type" />
+        android:contentDescription="Room Type"
+        android:layout_marginBottom="16dp"
+        android:paddingVertical="8dp"
+        android:background="@drawable/rounded_background" />
 
-
+    <!-- Coupon Code EditText -->
     <EditText
         android:id="@+id/editTextCouponCode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Enter Coupon Code (optional)"
         android:inputType="text"
+        android:textSize="18sp"
         android:importantForAccessibility="yes"
         android:contentDescription="Coupon Code"
-        android:layout_marginTop="12dp" />
+        android:layout_marginBottom="16dp"
+        android:paddingVertical="8dp"
+        android:paddingHorizontal="8dp"
+        android:background="@drawable/rounded_background" />
 
+    <!-- Total Price Text -->
     <TextView
         android:id="@+id/textViewPrice"
         android:layout_width="wrap_content"
@@ -68,25 +86,36 @@
         android:text="Total Price: $0"
         android:textSize="18sp"
         android:paddingTop="16dp"
+        android:textColor="@color/primaryColor"
         android:importantForAccessibility="yes"
         android:contentDescription="Total Price" />
 
+    <!-- Apply Coupon Button -->
     <Button
         android:id="@+id/buttonApplyCoupon"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Apply Coupon"
+        android:textSize="16sp"
+        android:textColor="@android:color/white"
+        android:padding="12dp"
+        android:layout_marginTop="24dp"
+        android:backgroundTint="@color/primaryColor"
         android:importantForAccessibility="yes"
-        android:contentDescription="Apply Coupon"
-        android:layout_marginTop="24dp" />
+        android:contentDescription="Apply Coupon" />
 
+    <!-- Confirm Booking Button -->
     <Button
         android:id="@+id/buttonNext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Confirm Booking"
+        android:textSize="16sp"
+        android:textColor="@android:color/white"
+        android:padding="12dp"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="@color/primaryColor"
         android:importantForAccessibility="yes"
-        android:contentDescription="Confirm Booking Button"
-        android:layout_marginTop="10dp" />
+        android:contentDescription="Confirm Booking Button" />
 
 </LinearLayout>
