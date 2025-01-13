@@ -18,7 +18,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- Logo Section -->
             <ImageView
                 android:id="@+id/banner"
                 android:layout_width="match_parent"
@@ -27,7 +26,6 @@
                 android:contentDescription="Banner"
                 android:scaleType="centerInside" />
 
-            <!-- Destination Section -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="64dp"
@@ -38,16 +36,17 @@
 
                 <ImageView
                     android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_location"
-                    android:contentDescription="Location Icon" />
+                    android:layout_height="51dp"
+                    android:contentDescription="Location Icon"
+                    android:src="@drawable/ic_location" />
 
-                <EditText
-                    android:id="@+id/location"
+                <Spinner
+                    android:id="@+id/location_spinner"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:layout_marginStart="8dp"
                     android:background="@null"
+                    android:spinnerMode="dropdown"
                     android:hint="Destination"
                     android:textSize="16sp" />
             </LinearLayout>
@@ -156,7 +155,6 @@
                     android:layout_marginTop="16dp" />
             </LinearLayout>
 
-            <!-- Search Button -->
             <Button
                 android:id="@+id/search_button"
                 android:layout_width="match_parent"
@@ -167,6 +165,16 @@
                 android:text="Search"
                 android:padding="12dp"
                 android:textSize="16sp" />
+            <Button
+                android:id="@+id/btn_history"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/primaryColor"
+                android:textColor="@android:color/white"
+                android:text="View History"
+                android:layout_marginTop="16dp"
+                android:layout_gravity="center_horizontal"
+                />
 
         </LinearLayout>
     </ScrollView>
