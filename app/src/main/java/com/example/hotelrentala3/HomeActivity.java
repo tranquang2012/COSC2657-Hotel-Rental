@@ -17,6 +17,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.hotelrentala3.Model.Hotel;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -29,6 +30,7 @@ import java.util.List;
 public class HomeActivity extends AppCompatActivity {
 
     private FirebaseFirestore db;
+    private FirebaseAuth auth;
     private TextView checkInDate;
     private TextView checkOutDate;
     private TextView tvRoomGuestInfo;
@@ -48,12 +50,13 @@ public class HomeActivity extends AppCompatActivity {
 
         // Initialize Firestore and views
         db = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
         locationSpinner = findViewById(R.id.location_spinner);  // Spinner for city selection
         checkInDate = findViewById(R.id.checkin_date);
         checkOutDate = findViewById(R.id.checkout_date);
         TextView searchButton = findViewById(R.id.search_button);
         tvRoomGuestInfo = findViewById(R.id.tv_room_guest_info);
-
+        Button historyButton = findViewById(R.id.btn_history);
         String[] items = {"Ho Chi Minh", "Hanoi", "Da Nang"};
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
@@ -64,6 +67,7 @@ public class HomeActivity extends AppCompatActivity {
         checkInDate.setOnClickListener(view -> openDatePicker("checkin"));
         checkOutDate.setOnClickListener(view -> openDatePicker("checkout"));
         tvRoomGuestInfo.setOnClickListener(view -> openRoomGuestDialog());
+
         searchButton.setOnClickListener(view -> {
             String selectedLocation = locationSpinner.getSelectedItem().toString();  // Get selected city
             String selectedCheckIn = checkInDate.getText().toString();
@@ -73,6 +77,17 @@ public class HomeActivity extends AppCompatActivity {
                 Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
             } else {
                 searchAvailableRooms(selectedLocation, selectedCheckIn, selectedCheckOut);
+            }
+        });
+
+        historyButton.setOnClickListener(view -> {
+            String userId = auth.getCurrentUser() != null ? auth.getCurrentUser().getUid() : null;
+            if (userId != null) {
+                Intent intent = new Intent(HomeActivity.this, HistoryActivity.class);
+                intent.putExtra("userId", userId);
+                startActivity(intent);
+            } else {
+                Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show();
             }
         });
     }
