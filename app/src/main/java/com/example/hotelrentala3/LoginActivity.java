@@ -148,12 +148,12 @@ public class LoginActivity extends AppCompatActivity {
         if(uid.equals("MmZ9jBxplcbv6Ybu7A6EMS39Sfs1")) {
             navigateToAdminActivity();
         }
-//        final String role;
-//        if(uid.equals("MmZ9jBxplcbv6Ybu7A6EMS39Sfs1")) {
-//            role = "admin";
-//        } else {
-//            role = "user";
-//        }
+        final String role;
+        if(uid.equals("MmZ9jBxplcbv6Ybu7A6EMS39Sfs1")) {
+            role = "admin";
+        } else {
+            role = "user";
+        }
 
         CollectionReference usersCollection = db.collection("Users");
         DocumentReference newUser = usersCollection.document(user.getUid());

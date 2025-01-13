@@ -2,8 +2,15 @@ package com.example.hotelrentala3;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -12,11 +19,15 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.hotelrentala3.Model.Hotel;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -26,6 +37,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -48,6 +60,16 @@ public class HomeActivity extends AppCompatActivity {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
+        });
+
+        countPromotions();
+        Button promotionsBtn = findViewById(R.id.promotions);
+        promotionsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(HomeActivity.this, NotificationsActivity.class);
+                startActivity(intent);
+            }
         });
 
         // Initialize Firestore and views
@@ -102,6 +124,67 @@ public class HomeActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         });
+    }
+
+    private void countPromotions() {
+        FirebaseFirestore db2 = FirebaseFirestore.getInstance();
+        Timestamp now = Timestamp.now();
+
+        db2.collection("promotions")
+                .whereLessThanOrEqualTo("from", now)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    Log.d("onSuccessTriggered", "aaa");
+                    List<Map<String, Object>> promotions = new ArrayList<>();
+                    for (DocumentSnapshot document : queryDocumentSnapshots) {
+                        Timestamp until = document.getTimestamp("until");
+
+                        if (until != null && until.compareTo(now) >= 0) {
+                            promotions.add(document.getData());
+                        }
+                    }
+                    int promotionCount = promotions.size();
+                    Log.d("promotionCount", String.valueOf(promotionCount));
+                    if (promotionCount > 0) {
+                        showNotification(promotionCount);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Failed to check promotions", Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    private void showNotification(int promotionCount) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.POST_NOTIFICATIONS}, 1);
+            }
+        }
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        if(Build.VERSION.SDK_INT < 26) {
+            Log.d("showNotif1", "aaa");
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+                    .setSmallIcon(android.R.drawable.ic_dialog_info)
+                    .setContentTitle("Promotions")
+                    .setContentText(promotionCount + " promotions are available. Check them out in the notifications section!")
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+            notificationManager.notify(1, builder.build());
+        } else {
+            Log.d("showNotif2", "NotificationManager: " + (notificationManager != null ? "Not null" : "Null"));
+            String channelId = "promotions_channel";
+            String channelName = "Promotions notifications";
+            NotificationChannel channel = new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_DEFAULT);
+            notificationManager.createNotificationChannel(channel);
+
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId)
+                    .setSmallIcon(android.R.drawable.ic_dialog_info)
+                    .setContentTitle("Promotions")
+                    .setContentText(promotionCount + " promotions are available. Check them out in the notifications section!")
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+            notificationManager.notify(1, builder.build());
+            Log.d("showNotif3", "ccc");
+        }
     }
 
     // Opens the date picker for check-in or check-out
