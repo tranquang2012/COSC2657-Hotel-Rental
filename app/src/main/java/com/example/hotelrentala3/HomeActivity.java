@@ -185,7 +185,11 @@ public class HomeActivity extends AppCompatActivity {
     private void showAvailableRooms(List<Hotel> availableHotels) {
         Intent intent = new Intent(this, SearchResultActivity.class);
         intent.putExtra("availableHotels", (Serializable) availableHotels);
-        intent.putExtra("location", locationSpinner.getSelectedItem().toString());  // Pass selected location
+        intent.putExtra("location", locationSpinner.getSelectedItem().toString());
+        intent.putExtra("checkInDate", checkInDate.getText().toString());  // Add check-in date
+        intent.putExtra("checkOutDate", checkOutDate.getText().toString()); // Add check-out date
+        intent.putExtra("roomDetails", tvRoomGuestInfo.getText().toString());
         startActivity(intent);
     }
+
 }
